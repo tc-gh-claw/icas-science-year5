@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICAS Earth Science Year 5 - 100 Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #fff;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .quiz-container {
+            padding: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .chinese-text {
+            font-size: 15px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .results {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .results p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .category-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .category-score {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .category-score h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .category-score p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 ICAS Earth Science Year 5</h1>
+            <p>Paper C | 100 Questions | 6 Categories | ICAS Year 5 Level</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <!-- Questions will be generated here -->
+        </div>
+
+        <div class="controls" id="controls">
+            <button class="btn btn-secondary" onclick="resetQuiz()">重置 Reset</button>
+            <button class="btn btn-primary" onclick="submitQuiz()">提交答案 Submit</button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="score-circle" id="scoreCircle">0</div>
+            <h2>測驗完成！Quiz Completed!</h2>
+            <p id="scoreText">你答對了 0/100 題 | You answered 0/100 correctly</p>
+            
+            <div class="category-scores">
+                <div class="category-score">
+                    <h4>🪨 Rocks & Minerals</h4>
+                    <p id="cat1Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>🌦️ Weather & Climate</h4>
+                    <p id="cat2Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>💧 Water Cycle</h4>
+                    <p id="cat3Score">0/15</p>
+                </div>
+                <div class="category-score">
+                    <h4>🌌 Solar System</h4>
+                    <p id="cat4Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>🌎 Earth's Structure</h4>
+                    <p id="cat5Score">0/15</p>
+                </div>
+                <div class="category-score">
+                    <h4>⚡ Natural Resources</h4>
+                    <p id="cat6Score">0/10</p>
+                </div>
+            </div>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">🏠 主頁 Home</a>
+                <a href="math.html" class="nav-link">🧮 Mathematics</a>
+                <a href="biology.html" class="nav-link">🧬 Biology</a>
+                <a href="chemistry.html" class="nav-link">⚗️ Chemistry</a>
+                <a href="physics.html" class="nav-link">🔬 Physics</a>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top: 20px;">再試一次 Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Question bank - 100 Earth Science questions organized by category
+        const questions = [
+            // Category 1: Rocks and Minerals (Questions 1-20)
+            {
+                id: 1,
+                category: "Rocks & Minerals",
+                question: "Which is NOT a type of rock?",
+                chinese: "哪個不是岩石類型？",
+                options: ["Metal", "Igneous", "Sedimentary", "Metamorphic"],
+                chineseOptions: ["金屬", "火成岩", "沉積岩", "變質岩"],
+                correct: 0
+            },
+            {
+                id: 2,
+                category: "Rocks & Minerals",
+                question: "Rock formed from cooled magma?",
+                chinese: "冷卻岩漿形成的岩石？",
+                options: ["Igneous rock", "Sedimentary rock", "Metamorphic rock", "Fossil rock"],
+                chineseOptions: ["火成岩", "沉積岩", "變質岩", "化石岩"],
+                correct: 0
+            },
+            {
+                id: 3,
+                category: "Rocks & Minerals",
+                question: "Hardest natural substance on Earth?",
+                chinese: "地球最硬的天然物質？",
+                options: ["Gold", "Diamond", "Iron", "Granite"],
+                chineseOptions: ["金", "鑽石", "鐵", "花崗岩"],
+                correct: 1
+            },
+            {
+                id: 4,
+                category: "Rocks & Minerals",
+                question: "What type of rock is formed from layers of sediment?",
+                chinese: "由沉積物層形成的岩石類型？",
+                options: ["Igneous", "Metamorphic", "Sedimentary", "Volcanic"],
+                chineseOptions: ["火成岩", "變質岩", "沉積岩", "火山岩"],
+                correct: 2
+            },
+            {
+                id: 5,
+                category: "Rocks & Minerals",
+                question: "Which mineral is used to make glass?",
+                chinese: "哪種礦物用於製造玻璃？",
+                options: ["Quartz", "Gold", "Copper", "Iron"],
+                chineseOptions: ["石英", "金", "銅", "鐵"],
+                correct: 0
+            },
+            {
+                id: 6,
+                category: "Rocks & Minerals",
+                question: "What causes rocks to become metamorphic?",
+                chinese: "什麼使岩石變成變質岩？",
+                options: ["Cooling quickly", "Heat and pressure", "Rain and wind", "Freezing water"],
+                chineseOptions: ["快速冷卻", "熱和壓力", "雨和風", "結冰的水"],
+                correct: 1
+            },
+            {
+                id: 7,
+                category: "Rocks & Minerals",
+                question: "Which mineral is the main source of aluminum?",
+                chinese: "哪種礦物是鋁的主要來源？",
+                options: ["Quartz", "Bauxite", "Gypsum", "Feldspar"],
+                chineseOptions: ["石英", "鋁土礦", "石膏", "長石"],
+                correct: 1
+            },
+            {
+                id: 8,
+                category: "Rocks & Minerals",
+                question: "What are fossils usually found in?",
+                chinese: "化石通常在哪種岩石中找到？",
+                options: ["Igneous rock", "Sedimentary rock", "Metamorphic rock", "Granite"],
+                chineseOptions: ["火成岩", "沉積岩", "變質岩", "花崗岩"],
+                correct: 1
+            },
+            {
+                id: 9,
+                category: "Rocks & Minerals",
+                question: "Which common mineral is used to make pencils?",
+                chinese: "哪種常見礦物用於製造鉛筆？",
+                options: ["Lead", "Graphite", "Coal", "Sulfur"],
+                chineseOptions: ["鉛", "石墨", "煤", "硫"],
+                correct: 1
+            },
+            {
+                id: 10,
+                category: "Rocks & Minerals",
+                question: "What is the term for broken pieces of rock?",
+                chinese: "岩石碎片的術語是？",
+                options: ["Crystals", "Sediment", "Minerals", "Metals"],
+                chineseOptions: ["晶體", "沉積物", "礦物", "金屬"],
+                correct: 1
+            },
+            {
+                id: 11,
+                category: "Rocks & Minerals",
+                question: "Which property describes how light reflects off a mineral?",
+                chinese: "描述光線從礦物表面反射的特性是？",
+                options: ["Hardness", "Color", "Luster", "Streak"],
+                chineseOptions: ["硬度", "顏色", "光澤", "條痕"],
+                correct: 2
+            },
+            {
+                id: 12,
+                category: "Rocks & Minerals",
+                question: "What scale is used to measure mineral hardness?",
+                chinese: "測量礦物硬度的量表是？",
+                options: ["Richter scale", "Mohs scale", "Celsius scale", "pH scale"],
+                chineseOptions: ["里氏量表", "莫氏量表", "攝氏量表", "pH量表"],
+                correct: 1
+            },
+            {
+                id: 13,
+                category: "Rocks & Minerals",
+                question: "Which rock type forms from volcanic activity?",
+                chinese: "哪種岩石類型由火山活動形成？",
+                options: ["Sedimentary", "Metamorphic", "Igneous", "Limestone"],
+                chineseOptions: ["沉積岩", "變質岩", "火成岩", "石灰岩"],
+                correct: 2
+            },
+            {
+                id: 14,
+                category: "Rocks & Minerals",
+                question: "What mineral is table salt made from?",
+                chinese: "食鹽由哪種礦物製成？",
+                options: ["Calcite", "Halite", "Quartz", "Gypsum"],
+                chineseOptions: ["方解石", "岩鹽", "石英", "石膏"],
+                correct: 1
+            },
+            {
+                id: 15,
+                category: "Rocks & Minerals",
+                question: "Which rock is commonly used for building materials?",
+                chinese: "哪種岩石常用於建築材料？",
+                options: ["Granite", "Obsidian", "Pumice", "Chalk"],
+                chineseOptions: ["花崗岩", "黑曜石", "浮石", "白堊"],
+                correct: 0
+            },
+            {
+                id: 16,
+                category: "Rocks & Minerals",
+                question: "What is the color of a mineral's powder called?",
+                chinese: "礦物粉末的顏色稱為？",
+                options: ["Luster", "Streak", "Hue", "Tint"],
+                chineseOptions: ["光澤", "條痕", "色調", "色澤"],
+                correct: 1
+            },
+            {
+                id: 17,
+                category: "Rocks & Minerals",
+                question: "Which mineral is used in plasterboard?",
+                chinese: "哪種礦物用於石膏板？",
+                options: ["Talc", "Gypsum", "Mica", "Calcite"],
+                chineseOptions: ["滑石", "石膏", "雲母", "方解石"],
+                correct: 1
+            },
+            {
+                id: 18,
+                category: "Rocks & Minerals",
+                question: "What process changes sediment into sedimentary rock?",
+                chinese: "將沉積物變成沉積岩的過程是？",
+                options: ["Melting", "Compaction and cementation", "Evaporation", "Freezing"],
+                chineseOptions: ["熔化", "壓實和膠結", "蒸發", "冷凍"],
+                correct: 1
+            },
+            {
+                id: 19,
+                category: "Rocks & Minerals",
+                question: "Which mineral is the softest on the Mohs scale?",
+                chinese: "莫氏量表上最軟的礦物是？",
+                options: ["Quartz", "Talc", "Feldspar", "Calcite"],
+                chineseOptions: ["石英", "滑石", "長石", "方解石"],
+                correct: 1
+            },
+            {
+                id: 20,
+                category: "Rocks & Minerals",
+                question: "What type of rock is marble?",
+                chinese: "大理石是哪種岩石類型？",
+                options: ["Igneous", "Sedimentary", "Metamorphic", "Volcanic"],
+                chineseOptions: ["火成岩", "沉積岩", "變質岩", "火山岩"],
+                correct: 2
+            },
+
+            // Category 2: Weather and Climate (Questions 21-40)
+            {
+                id: 21,
+                category: "Weather & Climate",
+                question: "Main source of energy for weather systems?",
+                chinese: "天氣系統的主要能量來源？",
+                options: ["Moon", "Volcanoes", "Sun", "Earth's core"],
+                chineseOptions: ["月球", "火山", "太陽", "地核"],
+                correct: 2
+            },
+            {
+                id: 22,
+                category: "Weather & Climate",
+                question: "Instrument to measure temperature?",
+                chinese: "測量溫度的儀器？",
+                options: ["Thermometer", "Barometer", "Rain gauge", "Anemometer"],
+                chineseOptions: ["溫度計", "氣壓計", "雨量計", "風速計"],
+                correct: 0
+            },
+            {
+                id: 23,
+                category: "Weather & Climate",
+                question: "Cloud type that produces rain?",
+                chinese: "產生雨的雲類型？",
+                options: ["Cirrus", "Stratus", "Cumulonimbus", "All clouds"],
+                chineseOptions: ["卷雲", "層雲", "積雨雲", "所有雲"],
+                correct: 2
+            },
+            {
+                id: 24,
+                category: "Weather & Climate",
+                question: "Instrument measuring wind speed?",
+                chinese: "測量風速的儀器？",
+                options: ["Thermometer", "Anemometer", "Barometer", "Hygrometer"],
+                chineseOptions: ["溫度計", "風速計", "氣壓計", "濕度計"],
+                correct: 1
+            },
+            {
+                id: 25,
+                category: "Weather & Climate",
+                question: "Main gas in Earth's atmosphere?",
+                chinese: "地球大氣主要氣體？",
+                options: ["Oxygen", "Carbon dioxide", "Hydrogen", "Nitrogen"],
+                chineseOptions: ["氧氣", "二氧化碳", "氫氣", "氮氣"],
+                correct: 3
+            },
+            {
+                id: 26,
+                category: "Weather & Climate",
+                question: "What is the ozone layer?",
+                chinese: "臭氧層是什麼？",
+                options: ["Layer protecting from UV", "A type of cloud", "A layer of water", "A volcanic layer"],
+                chineseOptions: ["保護免受紫外線的層", "一種雲", "一層水", "火山層"],
+                correct: 0
+            },
+            {
+                id: 27,
+                category: "Weather & Climate",
+                question: "What causes wind?",
+                chinese: "什麼造成風？",
+                options: ["Earth's rotation only", "Differences in air pressure", "Ocean waves", "Cloud movement"],
+                chineseOptions: ["只有地球自轉", "氣壓差異", "海浪", "雲的移動"],
+                correct: 1
+            },
+            {
+                id: 28,
+                category: "Weather & Climate",
+                question: "Which instrument measures air pressure?",
+                chinese: "哪種儀器測量氣壓？",
+                options: ["Anemometer", "Barometer", "Hygrometer", "Thermometer"],
+                chineseOptions: ["風速計", "氣壓計", "濕度計", "溫度計"],
+                correct: 1
+            },
+            {
+                id: 29,
+                category: "Weather & Climate",
+                question: "What type of weather is associated with high pressure?",
+                chinese: "高氣壓通常與什麼天氣相關？",
+                options: ["Stormy weather", "Rainy weather", "Clear skies", "Thunderstorms"],
+                chineseOptions: ["暴風雨天氣", "雨天天氣", "晴朗天空", "雷暴"],
+                correct: 2
+            },
+            {
+                id: 30,
+                category: "Weather & Climate",
+                question: "What do we call the average weather over many years?",
+                chinese: "多年平均天氣的稱呼是？",
+                options: ["Forecast", "Climate", "Season", "Temperature"],
+                chineseOptions: ["預報", "氣候", "季節", "溫度"],
+                correct: 1
+            },
+            {
+                id: 31,
+                category: "Weather & Climate",
+                question: "Which clouds are high, thin, and wispy?",
+                chinese: "哪種雲又高又薄又呈絲狀？",
+                options: ["Cumulus", "Stratus", "Cirrus", "Nimbus"],
+                chineseOptions: ["積雲", "層雲", "卷雲", "雨雲"],
+                correct: 2
+            },
+            {
+                id: 32,
+                category: "Weather & Climate",
+                question: "What is humidity?",
+                chinese: "濕度是什麼？",
+                options: ["Air temperature", "Amount of water vapor in air", "Wind speed", "Air pressure"],
+                chineseOptions: ["氣溫", "空氣中水蒸氣量", "風速", "氣壓"],
+                correct: 1
+            },
+            {
+                id: 33,
+                category: "Weather & Climate",
+                question: "What natural disaster is measured by the Fujita scale?",
+                chinese: "哪種自然災害用藤田級數測量？",
+                options: ["Earthquake", "Hurricane", "Tornado", "Flood"],
+                chineseOptions: ["地震", "颶風", "龍捲風", "洪水"],
+                correct: 2
+            },
+            {
+                id: 34,
+                category: "Weather & Climate",
+                question: "Which layer of the atmosphere contains the ozone layer?",
+                chinese: "哪層大氣包含臭氧層？",
+                options: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"],
+                chineseOptions: ["對流層", "平流層", "中氣層", "熱層"],
+                correct: 1
+            },
+            {
+                id: 35,
+                category: "Weather & Climate",
+                question: "What causes lightning?",
+                chinese: "什麼造成閃電？",
+                options: ["Wind", "Electrical discharge", "Heat", "Rain"],
+                chineseOptions: ["風", "放電", "熱", "雨"],
+                correct: 1
+            },
+            {
+                id: 36,
+                category: "Weather & Climate",
+                question: "What is the eye of a hurricane?",
+                chinese: "颶風的眼是什麼？",
+                options: ["Strongest winds", "Calm center", "Rainiest part", "Coldest area"],
+                chineseOptions: ["最強風", "平靜中心", "最多雨部分", "最冷區域"],
+                correct: 1
+            },
+            {
+                id: 37,
+                category: "Weather & Climate",
+                question: "Which region receives the most direct sunlight?",
+                chinese: "哪個區域接收最多直射陽光？",
+                options: ["North Pole", "Equator", "South Pole", "Temperate zones"],
+                chineseOptions: ["北極", "赤道", "南極", "溫帶"],
+                correct: 1
+            },
+            {
+                id: 38,
+                category: "Weather & Climate",
+                question: "What is a drought?",
+                chinese: "乾旱是什麼？",
+                options: ["Too much rain", "Long period without rain", "Strong wind", "Heavy snow"],
+                chineseOptions: ["太多雨", "長期無雨", "強風", "大雪"],
+                correct: 1
+            },
+            {
+                id: 39,
+                category: "Weather & Climate",
+                question: "What causes the seasons?",
+                chinese: "什麼造成季節？",
+                options: ["Distance from Sun", "Earth's tilt and orbit", "Moon's position", "Solar flares"],
+                chineseOptions: ["距離太陽", "地球傾斜和軌道", "月球位置", "太陽耀斑"],
+                correct: 1
+            },
+            {
+                id: 40,
+                category: "Weather & Climate",
+                question: "Which layer of the atmosphere do we live in?",
+                chinese: "我們生活在大氣的哪一層？",
+                options: ["Stratosphere", "Troposphere", "Mesosphere", "Exosphere"],
+                chineseOptions: ["平流層", "對流層", "中氣層", "外逸層"],
+                correct: 1
+            },
+
+            // Category 3: Water Cycle (Questions 41-55)
+            {
+                id: 41,
+                category: "Water Cycle",
+                question: "Process in water cycle that creates clouds?",
+                chinese: "水循環中形成雲的過程？",
+                options: ["Evaporation", "Precipitation", "Collection", "Condensation"],
+                chineseOptions: ["蒸發", "降水", "收集", "凝結"],
+                correct: 3
+            },
+            {
+                id: 42,
+                category: "Water Cycle",
+                question: "What is the water cycle?",
+                chinese: "水循環是什麼？",
+                options: ["Continuous movement of water", "Flow of water in rivers only", "Evaporation of oceans only", "Freezing of water"],
+                chineseOptions: ["水的持續循環", "只有河流水流", "只有海洋蒸發", "水結冰"],
+                correct: 0
+            },
+            {
+                id: 43,
+                category: "Water Cycle",
+                question: "What is evaporation?",
+                chinese: "蒸發是什麼？",
+                options: ["Liquid to gas", "Gas to liquid", "Solid to liquid", "Liquid to solid"],
+                chineseOptions: ["液體變氣體", "氣體變液體", "固體變液體", "液體變固體"],
+                correct: 0
+            },
+            {
+                id: 44,
+                category: "Water Cycle",
+                question: "What causes ocean tides?",
+                chinese: "什麼造成海洋潮汐？",
+                options: ["Sun only", "Gravitational pull of Moon and Sun", "Wind", "Earthquakes"],
+                chineseOptions: ["只有太陽", "月球和太陽引力", "風", "地震"],
+                correct: 1
+            },
+            {
+                id: 45,
+                category: "Water Cycle",
+                question: "What is precipitation?",
+                chinese: "降水是什麼？",
+                options: ["Water evaporating", "Water falling from clouds", "Water flowing in rivers", "Water freezing"],
+                chineseOptions: ["水蒸發", "水從雲中落下", "水在河流中流動", "水結冰"],
+                correct: 1
+            },
+            {
+                id: 46,
+                category: "Water Cycle",
+                question: "Which is NOT a form of precipitation?",
+                chinese: "哪個不是降水形式？",
+                options: ["Rain", "Snow", "Fog", "Hail"],
+                chineseOptions: ["雨", "雪", "霧", "冰雹"],
+                correct: 2
+            },
+            {
+                id: 47,
+                category: "Water Cycle",
+                question: "What happens during transpiration?",
+                chinese: "蒸騰過程中會發生什麼？",
+                options: ["Water moves underground", "Plants release water vapor", "Ice melts", "Clouds form"],
+                chineseOptions: ["水在地下移動", "植物釋放水蒸氣", "冰融化", "雲形成"],
+                correct: 1
+            },
+            {
+                id: 48,
+                category: "Water Cycle",
+                question: "Where does most evaporation on Earth occur?",
+                chinese: "地球上大部分蒸發發生在哪裡？",
+                options: ["Lakes", "Rivers", "Oceans", "Ponds"],
+                chineseOptions: ["湖泊", "河流", "海洋", "池塘"],
+                correct: 2
+            },
+            {
+                id: 49,
+                category: "Water Cycle",
+                question: "What is groundwater?",
+                chinese: "地下水是什麼？",
+                options: ["Water in clouds", "Water under the ground", "Water in ice caps", "Water in rivers"],
+                chineseOptions: ["雲中的水", "地下的水", "冰蓋中的水", "河流中的水"],
+                correct: 1
+            },
+            {
+                id: 50,
+                category: "Water Cycle",
+                question: "What process describes water soaking into the ground?",
+                chinese: "水滲入地下的過程稱為？",
+                options: ["Runoff", "Infiltration", "Percolation", "Collection"],
+                chineseOptions: ["逕流", "滲入", "滲透", "收集"],
+                correct: 1
+            },
+            {
+                id: 51,
+                category: "Water Cycle",
+                question: "What percentage of Earth is covered by water?",
+                chinese: "地球被水覆蓋的百分比？",
+                options: ["50%", "60%", "71%", "80%"],
+                chineseOptions: ["50%", "60%", "71%", "80%"],
+                correct: 2
+            },
+            {
+                id: 52,
+                category: "Water Cycle",
+                question: "What is the largest ocean on Earth?",
+                chinese: "地球上最大的海洋是？",
+                options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+                chineseOptions: ["大西洋", "印度洋", "北冰洋", "太平洋"],
+                correct: 3
+            },
+            {
+                id: 53,
+                category: "Water Cycle",
+                question: "What is a watershed?",
+                chinese: "什麼是流域？",
+                options: ["A building", "Area draining into a river", "A type of cloud", "A weather pattern"],
+                chineseOptions: ["建築物", "流入河流的區域", "一種雲", "天氣模式"],
+                correct: 1
+            },
+            {
+                id: 54,
+                category: "Water Cycle",
+                question: "Which form of frozen precipitation has a six-sided crystal shape?",
+                chinese: "哪種凍結降水具有六邊形晶體形狀？",
+                options: ["Hail", "Sleet", "Snow", "Frost"],
+                chineseOptions: ["冰雹", "雨夾雪", "雪", "霜"],
+                correct: 2
+            },
+            {
+                id: 55,
+                category: "Water Cycle",
+                question: "What is the water table?",
+                chinese: "地下水位是什麼？",
+                options: ["A table made of water", "Top of groundwater zone", "A river", "A cloud type"],
+                chineseOptions: ["水做的桌子", "地下水區頂部", "河流", "雲類型"],
+                correct: 1
+            },
+
+            // Category 4: Solar System (Questions 56-75)
+            {
+                id: 56,
+                category: "Solar System",
+                question: "Largest planet in our solar system?",
+                chinese: "太陽系最大行星？",
+                options: ["Earth", "Mars", "Saturn", "Jupiter"],
+                chineseOptions: ["地球", "火星", "土星", "木星"],
+                correct: 3
+            },
+            {
+                id: 57,
+                category: "Solar System",
+                question: "Time for Earth to orbit the Sun?",
+                chinese: "地球繞太陽一周時間？",
+                options: ["365 days", "24 hours", "30 days", "7 days"],
+                chineseOptions: ["365天", "24小時", "30天", "7天"],
+                correct: 0
+            },
+            {
+                id: 58,
+                category: "Solar System",
+                question: "Center of our solar system?",
+                chinese: "我們太陽系的中心？",
+                options: ["Earth", "Moon", "Sun", "Jupiter"],
+                chineseOptions: ["地球", "月球", "太陽", "木星"],
+                correct: 2
+            },
+            {
+                id: 59,
+                category: "Solar System",
+                question: "What is the Moon?",
+                chinese: "月球是什麼？",
+                options: ["A planet", "A star", "A natural satellite", "A comet"],
+                chineseOptions: ["行星", "恆星", "天然衛星", "彗星"],
+                correct: 2
+            },
+            {
+                id: 60,
+                category: "Solar System",
+                question: "Galaxy containing our solar system?",
+                chinese: "包含我們太陽系的星系？",
+                options: ["Andromeda", "Triangulum", "Milky Way", "Whirlpool"],
+                chineseOptions: ["仙女座", "三角座", "銀河系", "渦狀星系"],
+                correct: 2
+            },
+            {
+                id: 61,
+                category: "Solar System",
+                question: "How many planets in our solar system?",
+                chinese: "太陽系有多少顆行星？",
+                options: ["7", "8", "9", "10"],
+                chineseOptions: ["7", "8", "9", "10"],
+                correct: 1
+            },
+            {
+                id: 62,
+                category: "Solar System",
+                question: "Hottest planet in our solar system?",
+                chinese: "太陽系最熱的行星？",
+                options: ["Mercury", "Mars", "Earth", "Venus"],
+                chineseOptions: ["水星", "火星", "地球", "金星"],
+                correct: 3
+            },
+            {
+                id: 63,
+                category: "Solar System",
+                question: "Closest star to Earth?",
+                chinese: "離地球最近的恆星？",
+                options: ["Proxima Centauri", "Alpha Centauri", "Sun", "Sirius"],
+                chineseOptions: ["比鄰星", "南門二", "太陽", "天狼星"],
+                correct: 2
+            },
+            {
+                id: 64,
+                category: "Solar System",
+                question: "What causes day and night?",
+                chinese: "什麼造成晝夜交替？",
+                options: ["Earth around Sun", "Earth rotating", "Moon blocking Sun", "Sun around Earth"],
+                chineseOptions: ["地球繞太陽", "地球自轉", "月球遮太陽", "太陽繞地球"],
+                correct: 1
+            },
+            {
+                id: 65,
+                category: "Solar System",
+                question: "What is a constellation?",
+                chinese: "星座是什麼？",
+                options: ["Type of planet", "Group of galaxies", "Type of cloud", "Pattern of stars"],
+                chineseOptions: ["一種行星", "星系群", "一種雲", "星群圖案"],
+                correct: 3
+            },
+            {
+                id: 66,
+                category: "Solar System",
+                question: "Which planet is known as the Red Planet?",
+                chinese: "哪顆行星被稱為紅色星球？",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                chineseOptions: ["金星", "火星", "木星", "土星"],
+                correct: 1
+            },
+            {
+                id: 67,
+                category: "Solar System",
+                question: "Which planet has the most moons?",
+                chinese: "哪顆行星擁有最多衛星？",
+                options: ["Earth", "Mars", "Jupiter", "Saturn"],
+                chineseOptions: ["地球", "火星", "木星", "土星"],
+                correct: 2
+            },
+            {
+                id: 68,
+                category: "Solar System",
+                question: "What is the Great Red Spot on Jupiter?",
+                chinese: "木星上的大紅斑是什麼？",
+                options: ["A volcano", "A storm", "A crater", "A lake"],
+                chineseOptions: ["火山", "風暴", "隕石坑", "湖泊"],
+                correct: 1
+            },
+            {
+                id: 69,
+                category: "Solar System",
+                question: "Which planet is closest to the Sun?",
+                chinese: "哪顆行星最接近太陽？",
+                options: ["Venus", "Earth", "Mercury", "Mars"],
+                chineseOptions: ["金星", "地球", "水星", "火星"],
+                correct: 2
+            },
+            {
+                id: 70,
+                category: "Solar System",
+                question: "What are Saturn's rings made of?",
+                chinese: "土星環由什麼組成？",
+                options: ["Solid metal", "Ice and rock particles", "Gas", "Liquid water"],
+                chineseOptions: ["固體金屬", "冰和岩石顆粒", "氣體", "液態水"],
+                correct: 1
+            },
+            {
+                id: 71,
+                category: "Solar System",
+                question: "Which planet is known for its beautiful rings?",
+                chinese: "哪顆行星以其美麗的光環聞名？",
+                options: ["Jupiter", "Saturn", "Uranus", "Neptune"],
+                chineseOptions: ["木星", "土星", "天王星", "海王星"],
+                correct: 1
+            },
+            {
+                id: 72,
+                category: "Solar System",
+                question: "What is the name of Earth's only natural satellite?",
+                chinese: "地球唯一的天然衛星名稱是？",
+                options: ["Phobos", "Europa", "Moon", "Titan"],
+                chineseOptions: ["火衛一", "木衛二", "月球", "土衛六"],
+                correct: 2
+            },
+            {
+                id: 73,
+                category: "Solar System",
+                question: "How long does it take the Moon to orbit Earth?",
+                chinese: "月球繞地球一周需要多久？",
+                options: ["24 hours", "7 days", "27.3 days", "365 days"],
+                chineseOptions: ["24小時", "7天", "27.3天", "365天"],
+                correct: 2
+            },
+            {
+                id: 74,
+                category: "Solar System",
+                question: "What is a solar eclipse?",
+                chinese: "日食是什麼？",
+                options: ["Earth blocks Sun", "Moon blocks Sun", "Mars blocks Sun", "Sun blocks Moon"],
+                chineseOptions: ["地球遮擋太陽", "月球遮擋太陽", "火星遮擋太陽", "太陽遮擋月球"],
+                correct: 1
+            },
+            {
+                id: 75,
+                category: "Solar System",
+                question: "Which planet has the longest day?",
+                chinese: "哪顆行星的一天最長？",
+                options: ["Earth", "Mars", "Venus", "Jupiter"],
+                chineseOptions: ["地球", "火星", "金星", "木星"],
+                correct: 2
+            },
+
+            // Category 5: Earth's Structure (Questions 76-90)
+            {
+                id: 76,
+                category: "Earth's Structure",
+                question: "Earth layer made of molten metal?",
+                chinese: "由熔融金屬組成的地球層？",
+                options: ["Crust", "Outer core", "Mantle", "Inner core"],
+                chineseOptions: ["地殼", "外地核", "地幔", "內地核"],
+                correct: 1
+            },
+            {
+                id: 77,
+                category: "Earth's Structure",
+                question: "What causes earthquakes?",
+                chinese: "什麼導致地震？",
+                options: ["Wind blowing", "Rain falling", "Moon's gravity", "Movement of tectonic plates"],
+                chineseOptions: ["風吹", "下雨", "月球重力", "板塊運動"],
+                correct: 3
+            },
+            {
+                id: 78,
+                category: "Earth's Structure",
+                question: "Which layer of Earth do we live on?",
+                chinese: "我們生活在地球的哪層？",
+                options: ["Mantle", "Core", "Crust", "Atmosphere"],
+                chineseOptions: ["地幔", "地核", "地殼", "大氣層"],
+                correct: 2
+            },
+            {
+                id: 79,
+                category: "Earth's Structure",
+                question: "What is the Earth's inner core made of?",
+                chinese: "地球內核由什麼組成？",
+                options: ["Rock", "Molten metal", "Solid iron and nickel", "Water"],
+                chineseOptions: ["岩石", "熔融金屬", "固體鐵和鎳", "水"],
+                correct: 2
+            },
+            {
+                id: 80,
+                category: "Earth's Structure",
+                question: "What is erosion?",
+                chinese: "侵蝕是什麼？",
+                options: ["Formation of mountains", "Cooling of lava", "Wearing away of rocks", "Growth of plants"],
+                chineseOptions: ["山脈形成", "熔岩冷卻", "岩石磨蝕", "植物生長"],
+                correct: 2
+            },
+            {
+                id: 81,
+                category: "Earth's Structure",
+                question: "What is the mantle?",
+                chinese: "地幔是什麼？",
+                options: ["The outermost layer", "The layer between crust and core", "The center of Earth", "The atmosphere"],
+                chineseOptions: ["最外層", "地殼和地核之間的層", "地球中心", "大氣層"],
+                correct: 1
+            },
+            {
+                id: 82,
+                category: "Earth's Structure",
+                question: "What type of mountain forms when tectonic plates collide?",
+                chinese: "當板塊碰撞時形成什麼類型的山脈？",
+                options: ["Volcanic mountain", "Fold mountain", "Block mountain", "Dome mountain"],
+                chineseOptions: ["火山", "褶皺山", "斷塊山", "穹丘"],
+                correct: 1
+            },
+            {
+                id: 83,
+                category: "Earth's Structure",
+                question: "What is magma?",
+                chinese: "岩漿是什麼？",
+                options: ["Solid rock", "Molten rock beneath Earth's surface", "Hot water", "Ice"],
+                chineseOptions: ["固體岩石", "地表下的熔融岩石", "熱水", "冰"],
+                correct: 1
+            },
+            {
+                id: 84,
+                category: "Earth's Structure",
+                question: "What is lava?",
+                chinese: "熔岩是什麼？",
+                options: ["Rock from space", "Molten rock on Earth's surface", "Hot water spring", "Frozen magma"],
+                chineseOptions: ["來自太空的岩石", "地表的熔融岩石", "溫泉", "冷凍岩漿"],
+                correct: 1
+            },
+            {
+                id: 85,
+                category: "Earth's Structure",
+                question: "Which natural phenomenon is measured by the Richter scale?",
+                chinese: "哪種自然現象用里氏量表測量？",
+                options: ["Tornadoes", "Hurricanes", "Earthquakes", "Floods"],
+                chineseOptions: ["龍捲風", "颶風", "地震", "洪水"],
+                correct: 2
+            },
+            {
+                id: 86,
+                category: "Earth's Structure",
+                question: "What is a volcano?",
+                chinese: "火山是什麼？",
+                options: ["A mountain with a hole where magma erupts", "A type of rock", "A weather pattern", "A type of cloud"],
+                chineseOptions: ["有岩漿噴出孔的山的", "一種岩石", "天氣模式", "一種雲"],
+                correct: 0
+            },
+            {
+                id: 87,
+                category: "Earth's Structure",
+                question: "What is the thickest layer of Earth?",
+                chinese: "地球最厚的層是哪層？",
+                options: ["Crust", "Mantle", "Outer core", "Inner core"],
+                chineseOptions: ["地殼", "地幔", "外地核", "內地核"],
+                correct: 1
+            },
+            {
+                id: 88,
+                category: "Earth's Structure",
+                question: "What are tectonic plates?",
+                chinese: "板塊是什麼？",
+                options: ["Giant puzzle pieces of Earth's crust", "Types of volcanoes", "Weather patterns", "Ocean currents"],
+                chineseOptions: ["地殼的巨大拼圖", "火山類型", "天氣模式", "洋流"],
+                correct: 0
+            },
+            {
+                id: 89,
+                category: "Earth's Structure",
+                question: "What is the Ring of Fire?",
+                chinese: "環太平洋火山帶是什麼？",
+                options: ["A weather pattern", "An area with many volcanoes and earthquakes", "A type of rock", "A constellation"],
+                chineseOptions: ["天氣模式", "多火山和地震區域", "一種岩石", "星座"],
+                correct: 1
+            },
+            {
+                id: 90,
+                category: "Earth's Structure",
+                question: "What causes tsunamis?",
+                chinese: "什麼導致海嘯？",
+                options: ["Strong winds only", "Underwater earthquakes or volcanic eruptions", "Moon's gravity", "High tides"],
+                chineseOptions: ["只有強風", "海底地震或火山爆發", "月球重力", "高潮"],
+                correct: 1
+            },
+
+            // Category 6: Natural Resources (Questions 91-100)
+            {
+                id: 91,
+                category: "Natural Resources",
+                question: "Which natural resource is renewable?",
+                chinese: "哪種自然資源可再生？",
+                options: ["Solar energy", "Coal", "Petroleum", "Natural gas"],
+                chineseOptions: ["太陽能", "煤", "石油", "天然氣"],
+                correct: 0
+            },
+            {
+                id: 92,
+                category: "Natural Resources",
+                question: "Which is a fossil fuel?",
+                chinese: "哪個是化石燃料？",
+                options: ["Solar power", "Wind power", "Hydropower", "Natural gas"],
+                chineseOptions: ["太陽能", "風能", "水力", "天然氣"],
+                correct: 3
+            },
+            {
+                id: 93,
+                category: "Natural Resources",
+                question: "Which is NOT a renewable resource?",
+                chinese: "哪個不是可再生資源？",
+                options: ["Oil", "Sunlight", "Wind", "Water"],
+                chineseOptions: ["石油", "陽光", "風", "水"],
+                correct: 0
+            },
+            {
+                id: 94,
+                category: "Natural Resources",
+                question: "What is the main source of energy for most power plants?",
+                chinese: "大多數發電廠的主要能源是？",
+                options: ["Solar power", "Fossil fuels", "Wind power", "Nuclear power"],
+                chineseOptions: ["太陽能", "化石燃料", "風能", "核能"],
+                correct: 1
+            },
+            {
+                id: 95,
+                category: "Natural Resources",
+                question: "Which renewable energy uses flowing water?",
+                chinese: "哪種可再生能源利用流動的水？",
+                options: ["Solar", "Wind", "Hydroelectric", "Geothermal"],
+                chineseOptions: ["太陽能", "風能", "水力發電", "地熱能"],
+                correct: 2
+            },
+            {
+                id: 96,
+                category: "Natural Resources",
+                question: "What gas is released when fossil fuels burn?",
+                chinese: "化石燃料燃燒時釋放什麼氣體？",
+                options: ["Oxygen", "Nitrogen only", "Carbon dioxide", "Hydrogen"],
+                chineseOptions: ["氧氣", "只有氮氣", "二氧化碳", "氫氣"],
+                correct: 2
+            },
+            {
+                id: 97,
+                category: "Natural Resources",
+                question: "Which energy source comes from heat inside Earth?",
+                chinese: "哪種能源來自地球內部的熱量？",
+                options: ["Solar", "Wind", "Geothermal", "Hydroelectric"],
+                chineseOptions: ["太陽能", "風能", "地熱能", "水力發電"],
+                correct: 2
+            },
+            {
+                id: 98,
+                category: "Natural Resources",
+                question: "What is the process of turning sunlight into electricity?",
+                chinese: "將陽光轉化為電的過程是？",
+                options: ["Photosynthesis", "Photovoltaic effect", "Evaporation", "Conduction"],
+                chineseOptions: ["光合作用", "光伏效應", "蒸發", "傳導"],
+                correct: 1
+            },
+            {
+                id: 99,
+                category: "Natural Resources",
+                question: "Which resource is most commonly recycled?",
+                chinese: "哪種資源最常回收？",
+                options: ["Nuclear waste", "Paper", "Radioactive materials", "Natural gas"],
+                chineseOptions: ["核廢料", "紙張", "放射性材料", "天然氣"],
+                correct: 1
+            },
+            {
+                id: 100,
+                category: "Natural Resources",
+                question: "What is conservation?",
+                chinese: "保護是什麼？",
+                options: ["Using resources carelessly", "Protecting and preserving natural resources", "Burning fossil fuels", "Building more factories"],
+                chineseOptions: ["隨意使用資源", "保護和保存自然資源", "燃燒化石燃料", "建造更多工廠"],
+                correct: 1
+            }
+        ];
+
+        // User answers storage
+        let userAnswers = {};
+
+        // Initialize quiz
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${index + 1} of 100 | ${q.category}</div>
+                    <div class="question-text">
+                        ${q.question}
+                        <div class="chinese-text">${q.chinese}</div>
+                    </div>
+                    <div class="options">
+                        ${q.options.map((opt, optIndex) => `
+                            <div class="option" onclick="selectOption(${index}, ${optIndex})" data-q="${index}" data-opt="${optIndex}">
+                                ${String.fromCharCode(65 + optIndex)}. ${opt} (${q.chineseOptions[optIndex]})
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+            
+            updateProgress();
+        }
+
+        // Select option
+        function selectOption(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            
+            // Update UI
+            const options = document.querySelectorAll(`[data-q="${questionIndex}"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            
+            updateProgress();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            const progress = (answered / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Submit quiz
+        function submitQuiz() {
+            const answered = Object.keys(userAnswers).length;
+            if (answered < questions.length) {
+                const confirmSubmit = confirm(`You have answered ${answered} out of 100 questions. Are you sure you want to submit?\n\n你已回答了 ${answered}/100 題。確定要提交嗎？`);
+                if (!confirmSubmit) return;
+            }
+            
+            // Calculate scores
+            let totalCorrect = 0;
+            let categoryScores = {
+                "Rocks & Minerals": { correct: 0, total: 0 },
+                "Weather & Climate": { correct: 0, total: 0 },
+                "Water Cycle": { correct: 0, total: 0 },
+                "Solar System": { correct: 0, total: 0 },
+                "Earth's Structure": { correct: 0, total: 0 },
+                "Natural Resources": { correct: 0, total: 0 }
+            };
+            
+            questions.forEach((q, index) => {
+                const category = q.category;
+                categoryScores[category].total++;
+                
+                if (userAnswers[index] === q.correct) {
+                    totalCorrect++;
+                    categoryScores[category].correct++;
+                }
+                
+                // Show correct/incorrect
+                const options = document.querySelectorAll(`[data-q="${index}"]`);
+                options.forEach((opt, optIndex) => {
+                    opt.classList.remove('selected');
+                    if (optIndex === q.correct) {
+                        opt.classList.add('correct');
+                    } else if (optIndex === userAnswers[index] && optIndex !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                    opt.onclick = null;
+                    opt.style.cursor = 'default';
+                });
+            });
+            
+            // Show results
+            const percentage = Math.round((totalCorrect / questions.length) * 100);
+            document.getElementById('scoreCircle').textContent = percentage + '%';
+            document.getElementById('scoreText').textContent = `你答對了 ${totalCorrect}/100 題 | You answered ${totalCorrect}/100 correctly`;
+            
+            // Update category scores
+            document.getElementById('cat1Score').textContent = `${categoryScores["Rocks & Minerals"].correct}/20`;
+            document.getElementById('cat2Score').textContent = `${categoryScores["Weather & Climate"].correct}/20`;
+            document.getElementById('cat3Score').textContent = `${categoryScores["Water Cycle"].correct}/15`;
+            document.getElementById('cat4Score').textContent = `${categoryScores["Solar System"].correct}/20`;
+            document.getElementById('cat5Score').textContent = `${categoryScores["Earth's Structure"].correct}/15`;
+            document.getElementById('cat6Score').textContent = `${categoryScores["Natural Resources"].correct}/10`;
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Reset quiz
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('results').classList.remove('show');
+            initQuiz();
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize on load
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
