@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICAS Chemistry Year 5 - 100 Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #fff;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .quiz-container {
+            padding: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .question-text small {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .answer-explanation {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            background: #e8f4f8;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .answer-explanation.show {
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .results {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .results p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .category-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .category-score {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .category-score h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .category-score p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚗️ ICAS Chemistry Year 5</h1>
+            <p>Paper C | 100 Questions | 6 Categories</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <!-- Questions will be generated here -->
+        </div>
+
+        <div class="controls" id="controls">
+            <button class="btn btn-secondary" onclick="resetQuiz()">重置</button>
+            <button class="btn btn-primary" onclick="submitQuiz()">提交答案</button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="score-circle" id="scoreCircle">0</div>
+            <h2>測驗完成！</h2>
+            <p id="scoreText">你答對了 0/100 題</p>
+            
+            <div class="category-scores">
+                <div class="category-score">
+                    <h4>States of Matter</h4>
+                    <p id="cat1Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Mixtures & Solutions</h4>
+                    <p id="cat2Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Materials & Properties</h4>
+                    <p id="cat3Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Physical & Chemical Changes</h4>
+                    <p id="cat4Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Separation Methods</h4>
+                    <p id="cat5Score">0/20</p>
+                </div>
+            </div>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">🏠 主頁</a>
+                <a href="math.html" class="nav-link">🧮 Mathematics</a>
+                <a href="biology.html" class="nav-link">🧬 Biology</a>
+                <a href="physics.html" class="nav-link">🔬 Physics</a>
+                <a href="earth.html" class="nav-link">🌍 Earth Science</a>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top: 20px;">再試一次</button>
+        </div>
+    </div>
+
+    <script>
+        // Question bank - 100 questions organized by category
+        const questions = [
+            // Category 1: States of Matter (Questions 1-20)
+            {
+                id: 1,
+                category: "States of Matter",
+                question: "Which state has definite shape and volume?<br><small>(哪種物態有固定形狀和體積？)</small>",
+                options: ["Gas (氣體)", "Liquid (液體)", "Solid (固體)", "Plasma (等離子體)"],
+                correct: 2,
+                explanation: "固體有固定的形狀和體積。Solids have definite shape and volume."
+            },
+            {
+                id: 2,
+                category: "States of Matter",
+                question: "What happens when water freezes?<br><small>(水結冰時會？)</small>",
+                options: ["Liquid to solid (液體變固體)", "Solid to liquid (固體變液體)", "Liquid to gas (液體變氣體)", "It disappears (消失)"],
+                correct: 0,
+                explanation: "結冰是液態變固態的凝固過程。Freezing is the process of liquid turning into solid."
+            },
+            {
+                id: 3,
+                category: "States of Matter",
+                question: "Process when solid turns directly into gas?<br><small>(固體直接變氣體的過程？)</small>",
+                options: ["Melting (熔化)", "Boiling (沸騰)", "Sublimation (昇華)", "Condensation (凝結)"],
+                correct: 2,
+                explanation: "昇華是固體直接變成氣體，如乾冰。Sublimation is when solid turns directly to gas, like dry ice."
+            },
+            {
+                id: 4,
+                category: "States of Matter",
+                question: "Process when water vapor turns into liquid?<br><small>(水蒸氣變液態水的過程？)</small>",
+                options: ["Evaporation (蒸發)", "Freezing (凝固)", "Condensation (凝結)", "Melting (熔化)"],
+                correct: 2,
+                explanation: "凝結是氣體變成液體的過程。Condensation is when gas turns into liquid."
+            },
+            {
+                id: 5,
+                category: "States of Matter",
+                question: "Boiling point of water at sea level?<br><small>(水在海平面的沸點？)</small>",
+                options: ["0°C", "50°C", "90°C", "100°C"],
+                correct: 3,
+                explanation: "水在標準大氣壓下的沸點是100°C。Water boils at 100°C at sea level."
+            },
+            {
+                id: 6,
+                category: "States of Matter",
+                question: "Freezing point of water?<br><small>(水的冰點？)</small>",
+                options: ["100°C", "50°C", "25°C", "0°C"],
+                correct: 3,
+                explanation: "水在0°C時結冰。Water freezes at 0°C."
+            },
+            {
+                id: 7,
+                category: "States of Matter",
+                question: "What happens when a gas is heated?<br><small>(氣體受熱時會？)</small>",
+                options: ["Particles stop moving (粒子停止)", "Become smaller (變小)", "Lose energy (失去能量)", "Move faster and spread (移動更快並擴散)"],
+                correct: 3,
+                explanation: "加熱使粒子獲得能量，運動加快。Heating gives particles more energy to move faster."
+            },
+            {
+                id: 8,
+                category: "States of Matter",
+                question: "What happens when a gas is cooled?<br><small>(氣體被冷卻時會？)</small>",
+                options: ["May turn into liquid (可能變液體)", "Expands (膨脹)", "Becomes less dense (變稀疏)", "Moves faster (移動更快)"],
+                correct: 0,
+                explanation: "冷卻氣體可能使其凝結成液體。Cooling gas may cause it to condense into liquid."
+            },
+            {
+                id: 9,
+                category: "States of Matter",
+                question: "What happens when a substance melts?<br><small>(物質熔化時會？)</small>",
+                options: ["Liquid to solid", "Liquid to gas", "Solid to liquid", "It disappears"],
+                correct: 2,
+                explanation: "熔化是固體變成液體的過程。Melting is when solid turns into liquid."
+            },
+            {
+                id: 10,
+                category: "States of Matter",
+                question: "Gas making up 78% of Earth's atmosphere?<br><small>(佔大氣78%的氣體？)</small>",
+                options: ["Nitrogen (氮氣)", "Oxygen (氧氣)", "Carbon dioxide (二氧化碳)", "Hydrogen (氫氣)"],
+                correct: 0,
+                explanation: "氮氣約佔空氣的78%。Nitrogen makes up about 78% of the atmosphere."
+            },
+            {
+                id: 11,
+                category: "States of Matter",
+                question: "Which state of matter has particles that are closest together?<br><small>(哪種物態的粒子最接近？)</small>",
+                options: ["Solid (固體)", "Liquid (液體)", "Gas (氣體)", "Plasma (等離子體)"],
+                correct: 0,
+                explanation: "固體的粒子緊密排列。Particles in solids are packed closely together."
+            },
+            {
+                id: 12,
+                category: "States of Matter",
+                question: "Which state of matter takes the shape of its container?<br><small>(哪種物態會隨容器改變形狀？)</small>",
+                options: ["Only solid", "Only liquid", "Liquid and gas", "All states"],
+                correct: 2,
+                explanation: "液體和氣體都會隨容器改變形狀。Liquids and gases take the shape of their container."
+            },
+            {
+                id: 13,
+                category: "States of Matter",
+                question: "What is evaporation?<br><small>(什麼是蒸發？)</small>",
+                options: ["Gas to liquid", "Liquid to gas", "Solid to liquid", "Solid to gas"],
+                correct: 1,
+                explanation: "蒸發是液體變成氣體的過程。Evaporation is when liquid turns into gas."
+            },
+            {
+                id: 14,
+                category: "States of Matter",
+                question: "Which metal is liquid at room temperature?<br><small>(室溫下是液體的金屬？)</small>",
+                options: ["Gold (金)", "Silver (銀)", "Mercury (汞)", "Copper (銅)"],
+                correct: 2,
+                explanation: "水銀是唯一在室溫下呈液態的金屬。Mercury is the only metal that is liquid at room temperature."
+            },
+            {
+                id: 15,
+                category: "States of Matter",
+                question: "What is the process called when a liquid slowly turns to gas at room temperature?<br><small>(液體在室溫下緩慢變成氣體的過程叫？)</small>",
+                options: ["Boiling (沸騰)", "Evaporation (蒸發)", "Condensation (凝結)", "Freezing (凝固)"],
+                correct: 1,
+                explanation: "蒸發可以在任何溫度發生，沸騰只在沸點發生。Evaporation happens at any temperature, boiling only at boiling point."
+            },
+            {
+                id: 16,
+                category: "States of Matter",
+                question: "In which state do particles move the fastest?<br><small>(哪種物態的粒子移動最快？)</small>",
+                options: ["Solid", "Liquid", "Gas", "They move the same"],
+                correct: 2,
+                explanation: "氣體粒子移動最快，因為它們有最多能量。Gas particles move fastest as they have the most energy."
+            },
+            {
+                id: 17,
+                category: "States of Matter",
+                question: "What happens to the volume of water when it freezes?<br><small>(水結冰時體積會？)</small>",
+                options: ["Decreases (減少)", "Stays the same", "Increases (增加)", "Becomes zero"],
+                correct: 2,
+                explanation: "水結冰時體積會膨脹。Water expands when it freezes into ice."
+            },
+            {
+                id: 18,
+                category: "States of Matter",
+                question: "Which state can be compressed easily?<br><small>(哪種物態容易被壓縮？)</small>",
+                options: ["Solid", "Liquid", "Gas", "None"],
+                correct: 2,
+                explanation: "氣體粒子之間有很多空間，可以被壓縮。Gas can be compressed as particles are far apart."
+            },
+            {
+                id: 19,
+                category: "States of Matter",
+                question: "What is the temperature at which a liquid boils called?<br><small>(液體沸騰的溫度稱為？)</small>",
+                options: ["Freezing point", "Melting point", "Boiling point", "Condensation point"],
+                correct: 2,
+                explanation: "沸點是液體變成氣體的溫度。Boiling point is when liquid turns to gas."
+            },
+            {
+                id: 20,
+                category: "States of Matter",
+                question: "Which of these is NOT a state of matter?<br><small>(哪個不是物態？)</small>",
+                options: ["Solid", "Liquid", "Gas", "Mixture"],
+                correct: 3,
+                explanation: "混合物不是物態，而是一種組合。Mixture is not a state of matter."
+            },
+
+            // Category 2: Mixtures & Solutions (Questions 21-40)
+            {
+                id: 21,
+                category: "Mixtures & Solutions",
+                question: "Mixture where one substance dissolves in another?<br><small>(一種物質溶解在另一種中的混合物？)</small>",
+                options: ["Solution (溶液)", "Suspension (懸浮液)", "Compound (化合物)", "Element (元素)"],
+                correct: 0,
+                explanation: "溶液是溶質完全溶解在溶劑中的均勻混合物。A solution is a homogeneous mixture where solute dissolves in solvent."
+            },
+            {
+                id: 22,
+                category: "Mixtures & Solutions",
+                question: "Mixture where particles are scattered but not dissolved?<br><small>(粒子分散但未溶解的混合物？)</small>",
+                options: ["Solution (溶液)", "Compound (化合物)", "Element (元素)", "Suspension (懸浮液)"],
+                correct: 3,
+                explanation: "懸浮液中固體粒子分散在液體中但會沉澱。In a suspension, solid particles are scattered but will settle."
+            },
+            {
+                id: 23,
+                category: "Mixtures & Solutions",
+                question: "pH value of pure water?<br><small>(純水的pH值？)</small>",
+                options: ["7", "1", "14", "0"],
+                correct: 0,
+                explanation: "純水是中性，pH值為7。Pure water is neutral with a pH of 7."
+            },
+            {
+                id: 24,
+                category: "Mixtures & Solutions",
+                question: "What do we call the substance that dissolves in a solvent?<br><small>(在溶劑中溶解的物質稱為？)</small>",
+                options: ["Solvent (溶劑)", "Solute (溶質)", "Solution (溶液)", "Mixture (混合物)"],
+                correct: 1,
+                explanation: "溶質是溶解在溶劑中的物質。Solute is the substance that dissolves in the solvent."
+            },
+            {
+                id: 25,
+                category: "Mixtures & Solutions",
+                question: "Which of these is a solution?<br><small>(哪個是溶液？)</small>",
+                options: ["Sand in water", "Salt in water", "Oil in water", "Chalk in water"],
+                correct: 1,
+                explanation: "鹽溶解在水中形成溶液。Salt dissolves in water to form a solution."
+            },
+            {
+                id: 26,
+                category: "Mixtures & Solutions",
+                question: "What happens when you add more solute than can dissolve?<br><small>(加入過多溶質時會？)</small>",
+                options: ["It all dissolves", "It forms a saturated solution", "It disappears", "It becomes a gas"],
+                correct: 1,
+                explanation: "飽和溶液不能再溶解更多溶質。A saturated solution cannot dissolve any more solute."
+            },
+            {
+                id: 27,
+                category: "Mixtures & Solutions",
+                question: "Which pH value indicates an acid?<br><small>(哪個pH值表示酸性？)</small>",
+                options: ["7", "8", "5", "14"],
+                correct: 2,
+                explanation: "pH值小於7表示酸性。pH less than 7 indicates acidity."
+            },
+            {
+                id: 28,
+                category: "Mixtures & Solutions",
+                question: "Which pH value indicates a base/alkali?<br><small>(哪個pH值表示鹼性？)</small>",
+                options: ["7", "10", "4", "1"],
+                correct: 1,
+                explanation: "pH值大於7表示鹼性。pH greater than 7 indicates alkalinity."
+            },
+            {
+                id: 29,
+                category: "Mixtures & Solutions",
+                question: "What is the main solvent in seawater?<br><small>(海水中的主要溶劑是？)</small>",
+                options: ["Salt", "Water", "Sand", "Oil"],
+                correct: 1,
+                explanation: "水是溶劑，溶解了鹽等溶質。Water is the solvent that dissolves salt."
+            },
+            {
+                id: 30,
+                category: "Mixtures & Solutions",
+                question: "What type of mixture is air?<br><small>(空氣是什麼類型的混合物？)</small>",
+                options: ["Solution (溶液)", "Suspension (懸浮液)", "Compound (化合物)", "Element (元素)"],
+                correct: 0,
+                explanation: "空氣是氣體溶液。Air is a gaseous solution."
+            },
+            {
+                id: 31,
+                category: "Mixtures & Solutions",
+                question: "What happens to solubility of most solids when temperature increases?<br><small>(溫度升高時大多數固體的溶解度會？)</small>",
+                options: ["Decrease", "Increase", "Stay the same", "Become zero"],
+                correct: 1,
+                explanation: "大多數固體在溫度升高時溶解度增加。Most solids become more soluble at higher temperatures."
+            },
+            {
+                id: 32,
+                category: "Mixtures & Solutions",
+                question: "What is a colloid?<br><small>(什麼是膠體？)</small>",
+                options: ["A type of solution", "Particles too small to see but don't settle", "A pure substance", "A gas mixture"],
+                correct: 1,
+                explanation: "膠體粒子很小但不會沉澱。Colloid particles are small but don't settle out."
+            },
+            {
+                id: 33,
+                category: "Mixtures & Solutions",
+                question: "Which is an example of a colloid?<br><small>(哪個是膠體的例子？)</small>",
+                options: ["Salt water", "Milk", "Sand in water", "Pure water"],
+                correct: 1,
+                explanation: "牛奶是脂肪粒子分散在水中的膠體。Milk is a colloid of fat droplets in water."
+            },
+            {
+                id: 34,
+                category: "Mixtures & Solutions",
+                question: "What color does litmus paper turn in acid?<br><small>(石蕊試紙在酸中變什麼顏色？)</small>",
+                options: ["Blue", "Red", "Green", "Yellow"],
+                correct: 1,
+                explanation: "石蕊試紙在酸中變紅色。Litmus turns red in acid."
+            },
+            {
+                id: 35,
+                category: "Mixtures & Solutions",
+                question: "What color does litmus paper turn in alkali?<br><small>(石蕊試紙在鹼中變什麼顏色？)</small>",
+                options: ["Red", "Blue", "Green", "Purple"],
+                correct: 1,
+                explanation: "石蕊試紙在鹼中變藍色。Litmus turns blue in alkali."
+            },
+            {
+                id: 36,
+                category: "Mixtures & Solutions",
+                question: "Which gas dissolves in water to make it slightly acidic?<br><small>(哪種氣體溶解在水中會使水微酸？)</small>",
+                options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"],
+                correct: 2,
+                explanation: "二氧化碳溶解形成碳酸。Carbon dioxide dissolves to form carbonic acid."
+            },
+            {
+                id: 37,
+                category: "Mixtures & Solutions",
+                question: "What does 'aqueous solution' mean?<br><small>('水溶液'的意思是？)</small>",
+                options: ["Solution in alcohol", "Solution in water", "Solid mixture", "Gas mixture"],
+                correct: 1,
+                explanation: "水溶液是以水為溶劑的溶液。Aqueous means water is the solvent."
+            },
+            {
+                id: 38,
+                category: "Mixtures & Solutions",
+                question: "Which is NOT a characteristic of a solution?<br><small>(哪個不是溶液的特徵？)</small>",
+                options: ["Transparent", "Particles settle over time", "Uniform composition", "Cannot be separated by filtration"],
+                correct: 1,
+                explanation: "溶液中的粒子不會沉澱。Particles in a solution do not settle."
+            },
+            {
+                id: 39,
+                category: "Mixtures & Solutions",
+                question: "What is the universal solvent?<br><small>(什麼是通用溶劑？)</small>",
+                options: ["Oil", "Alcohol", "Water", "Acid"],
+                correct: 2,
+                explanation: "水被稱為通用溶劑因為它能溶解很多物質。Water is called the universal solvent."
+            },
+            {
+                id: 40,
+                category: "Mixtures & Solutions",
+                question: "Which would form a suspension when mixed with water?<br><small>(哪個與水混合會形成懸浮液？)</small>",
+                options: ["Sugar", "Salt", "Soil", "Vinegar"],
+                correct: 2,
+                explanation: "土壤不會溶解，會形成懸浮液。Soil doesn't dissolve and forms a suspension."
+            },
+
+            // Category 3: Materials & Properties (Questions 41-60)
+            {
+                id: 41,
+                category: "Materials & Properties",
+                question: "Best conductor of electricity?<br><small>(最佳電導體？)</small>",
+                options: ["Wood (木頭)", "Plastic (塑膠)", "Glass (玻璃)", "Copper (銅)"],
+                correct: 3,
+                explanation: "銅是金屬，是優良的電導體。Copper is a metal and excellent conductor of electricity."
+            },
+            {
+                id: 42,
+                category: "Materials & Properties",
+                question: "Which material is magnetic?<br><small>(哪種材料有磁性？)</small>",
+                options: ["Aluminum (鋁)", "Iron (鐵)", "Wood (木頭)", "Glass (玻璃)"],
+                correct: 1,
+                explanation: "鐵是磁性材料，會被磁鐵吸引。Iron is magnetic and attracted to magnets."
+            },
+            {
+                id: 43,
+                category: "Materials & Properties",
+                question: "Which is a good insulator of heat?<br><small>(良好的熱絕緣體？)</small>",
+                options: ["Copper (銅)", "Plastic (塑膠)", "Aluminum (鋁)", "Silver (銀)"],
+                correct: 1,
+                explanation: "塑膠是熱的不良導體，是良好的絕緣體。Plastic is a poor heat conductor, making it a good insulator."
+            },
+            {
+                id: 44,
+                category: "Materials & Properties",
+                question: "Property describing how well heat passes through?<br><small>(描述熱量通過程度的特性？)</small>",
+                options: ["Elasticity (彈性)", "Flexibility (柔韌性)", "Thermal conductivity (導熱性)", "Transparency (透明度)"],
+                correct: 2,
+                explanation: "導熱性描述材料傳導熱的能力。Thermal conductivity describes how well heat passes through a material."
+            },
+            {
+                id: 45,
+                category: "Materials & Properties",
+                question: "Which material is transparent?<br><small>(哪種材料是透明的？)</small>",
+                options: ["Wood (木頭)", "Glass (玻璃)", "Cardboard (紙板)", "Metal (金屬)"],
+                correct: 1,
+                explanation: "玻璃允許光線穿透，是透明材料。Glass allows light to pass through, making it transparent."
+            },
+            {
+                id: 46,
+                category: "Materials & Properties",
+                question: "Term for material that doesn't allow electricity?<br><small>(不允許電流通過的材料稱為？)</small>",
+                options: ["Conductor (導體)", "Magnet (磁鐵)", "Metal (金屬)", "Insulator (絕緣體)"],
+                correct: 3,
+                explanation: "絕緣體阻止電流通過。Insulators prevent electricity from passing through."
+            },
+            {
+                id: 47,
+                category: "Materials & Properties",
+                question: "Property describing weight for size?<br><small>(描述相對於大小的重量的特性？)</small>",
+                options: ["Volume (體積)", "Mass (質量)", "Length (長度)", "Density (密度)"],
+                correct: 3,
+                explanation: "密度是質量除以體積。Density is mass divided by volume."
+            },
+            {
+                id: 48,
+                category: "Materials & Properties",
+                question: "Which metal is the best conductor of heat?<br><small>(哪種金屬是最佳熱導體？)</small>",
+                options: ["Iron", "Copper", "Lead", "Aluminum"],
+                correct: 1,
+                explanation: "銅是優良的熱導體。Copper is an excellent conductor of heat."
+            },
+            {
+                id: 49,
+                category: "Materials & Properties",
+                question: "What property describes how stretchy a material is?<br><small>(描述材料拉伸特性的性質是？)</small>",
+                options: ["Strength", "Elasticity", "Hardness", "Brittleness"],
+                correct: 1,
+                explanation: "彈性描述材料被拉伸後恢復原狀的能力。Elasticity describes how stretchy a material is."
+            },
+            {
+                id: 50,
+                category: "Materials & Properties",
+                question: "Which material would be best for making a cooking pot handle?<br><small>(哪種材料最適合做鍋柄？)</small>",
+                options: ["Copper", "Aluminum", "Plastic", "Iron"],
+                correct: 2,
+                explanation: "塑膠是熱絕緣體，不會燙手。Plastic is a heat insulator."
+            },
+            {
+                id: 51,
+                category: "Materials & Properties",
+                question: "What does 'opaque' mean?<br><small>('不透明'的意思是？)</small>",
+                options: ["Allows light through", "Blocks light", "Bends light", "Reflects all light"],
+                correct: 1,
+                explanation: "不透明材料阻止光線通過。Opaque materials block light."
+            },
+            {
+                id: 52,
+                category: "Materials & Properties",
+                question: "Which material is flexible?<br><small>(哪種材料有柔韌性？)</small>",
+                options: ["Glass", "Rubber", "Ceramic", "Stone"],
+                correct: 1,
+                explanation: "橡膠可以被彎曲而不斷裂。Rubber can bend without breaking."
+            },
+            {
+                id: 53,
+                category: "Materials & Properties",
+                question: "What is a material that breaks easily called?<br><small>(容易破碎的材料稱為？)</small>",
+                options: ["Flexible", "Brittle", "Elastic", "Soft"],
+                correct: 1,
+                explanation: "脆性材料容易破碎。Brittle materials break easily."
+            },
+            {
+                id: 54,
+                category: "Materials & Properties",
+                question: "Which is a natural material?<br><small>(哪個是天然材料？)</small>",
+                options: ["Plastic", "Cotton", "Nylon", "Glass"],
+                correct: 1,
+                explanation: "棉花是天然植物纖維。Cotton is a natural plant fiber."
+            },
+            {
+                id: 55,
+                category: "Materials & Properties",
+                question: "Which is a synthetic/man-made material?<br><small>(哪個是人造材料？)</small>",
+                options: ["Wood", "Wool", "Plastic", "Leather"],
+                correct: 2,
+                explanation: "塑膠是人造的合成材料。Plastic is a synthetic material made by humans."
+            },
+            {
+                id: 56,
+                category: "Materials & Properties",
+                question: "What property measures how hard a material is?<br><small>(測量材料硬度的性質是？)</small>",
+                options: ["Flexibility", "Hardness", "Transparency", "Conductivity"],
+                correct: 1,
+                explanation: "硬度測量材料抵抗刮擦的能力。Hardness measures resistance to scratching."
+            },
+            {
+                id: 57,
+                category: "Materials & Properties",
+                question: "Which metal is used in electrical wires?<br><small>(哪種金屬用於電線？)</small>",
+                options: ["Gold", "Copper", "Lead", "Mercury"],
+                correct: 1,
+                explanation: "銅因為導電性好且價格合理而常用。Copper is used due to good conductivity and reasonable price."
+            },
+            {
+                id: 58,
+                category: "Materials & Properties",
+                question: "What does waterproof mean?<br><small>('防水'的意思是？)</small>",
+                options: ["Absorbs water", "Repels water", "Dissolves in water", "Floats on water"],
+                correct: 1,
+                explanation: "防水材料排斥水。Waterproof materials repel water."
+            },
+            {
+                id: 59,
+                category: "Materials & Properties",
+                question: "Which material is biodegradable?<br><small>(哪種材料可生物降解？)</small>",
+                options: ["Plastic bag", "Paper", "Aluminum can", "Glass bottle"],
+                correct: 1,
+                explanation: "紙可以被微生物分解。Paper can be broken down by microorganisms."
+            },
+            {
+                id: 60,
+                category: "Materials & Properties",
+                question: "What is rust?<br><small>(什麼是鏽？)</small>",
+                options: ["Pure iron", "Iron oxide", "Iron dissolved in water", "A type of paint"],
+                correct: 1,
+                explanation: "鏽是氧化鐵，是鐵與氧氣反應的產物。Rust is iron oxide formed when iron reacts with oxygen."
+            },
+
+            // Category 4: Physical & Chemical Changes (Questions 61-80)
+            {
+                id: 61,
+                category: "Physical & Chemical Changes",
+                question: "Which is a physical change?<br><small>(哪個是物理變化？)</small>",
+                options: ["Burning wood (燃燒木頭)", "Cutting paper (剪紙)", "Rusting iron (鐵生鏽)", "Baking a cake (烤蛋糕)"],
+                correct: 1,
+                explanation: "剪紙只是改變形狀，沒有產生新物質。Cutting paper only changes shape, no new substance is formed."
+            },
+            {
+                id: 62,
+                category: "Physical & Chemical Changes",
+                question: "Which is a chemical change?<br><small>(哪個是化學變化？)</small>",
+                options: ["Baking bread (烤麵包)", "Breaking glass (打破玻璃)", "Tearing paper (撕紙)", "Cutting wood (切木頭)"],
+                correct: 0,
+                explanation: "烤麵包產生新物質，是化學變化。Baking bread creates new substances, which is a chemical change."
+            },
+            {
+                id: 63,
+                category: "Physical & Chemical Changes",
+                question: "Which is a reversible change?<br><small>(哪個是可逆變化？)</small>",
+                options: ["Burning paper (燃燒紙張)", "Freezing water (水結冰)", "Cooking an egg (煮雞蛋)", "Rusting (生鏽)"],
+                correct: 1,
+                explanation: "水結冰後可以融化回液態，是可逆的。Water freezing can be reversed by melting."
+            },
+            {
+                id: 64,
+                category: "Physical & Chemical Changes",
+                question: "Gas given off when acid reacts with metal?<br><small>(酸與金屬反應釋放的氣體？)</small>",
+                options: ["Hydrogen (氫氣)", "Oxygen (氧氣)", "Nitrogen (氮氣)", "Carbon dioxide (二氧化碳)"],
+                correct: 0,
+                explanation: "酸與金屬反應產生氫氣。Acid reacting with metal produces hydrogen gas."
+            },
+            {
+                id: 65,
+                category: "Physical & Chemical Changes",
+                question: "What gas is produced when vinegar reacts with baking soda?<br><small>(醋與小蘇打反應產生什麼氣體？)</small>",
+                options: ["Hydrogen", "Oxygen", "Carbon dioxide", "Nitrogen"],
+                correct: 2,
+                explanation: "這個反應產生二氧化碳氣體。This reaction produces carbon dioxide gas."
+            },
+            {
+                id: 66,
+                category: "Physical & Chemical Changes",
+                question: "What is the sign of a chemical change?<br><small>(化學變化的徵兆是？)</small>",
+                options: ["Change in shape only", "New substance formed", "Change in size", "No temperature change"],
+                correct: 1,
+                explanation: "化學變化會產生新物質。A new substance is formed in chemical changes."
+            },
+            {
+                id: 67,
+                category: "Physical & Chemical Changes",
+                question: "Which is evidence of a chemical reaction?<br><small>(哪個是化學反應的證據？)</small>",
+                options: ["Change in color", "Change in shape", "Getting bigger", "Getting smaller"],
+                correct: 0,
+                explanation: "顏色變化可能是化學反應的跡象。Color change can indicate a chemical reaction."
+            },
+            {
+                id: 68,
+                category: "Physical & Chemical Changes",
+                question: "Is dissolving sugar in water a physical or chemical change?<br><small>(糖溶解在水中是物理還是化學變化？)</small>",
+                options: ["Chemical", "Physical", "Both", "Neither"],
+                correct: 1,
+                explanation: "糖溶解是可逆的物理變化。Dissolving sugar is a reversible physical change."
+            },
+            {
+                id: 69,
+                category: "Physical & Chemical Changes",
+                question: "Is burning magnesium a physical or chemical change?<br><small>(燃燒鎂是物理還是化學變化？)</small>",
+                options: ["Physical", "Chemical", "Both", "Neither"],
+                correct: 1,
+                explanation: "燃燒產生氧化鎂，是新物質。Burning produces magnesium oxide, a new substance."
+            },
+            {
+                id: 70,
+                category: "Physical & Chemical Changes",
+                question: "What happens in combustion?<br><small>(燃燒過程中發生什麼？)</small>",
+                options: ["Material combines with nitrogen", "Material combines with oxygen", "Material turns to liquid", "Material disappears"],
+                correct: 1,
+                explanation: "燃燒是物質與氧氣反應。Combustion is reaction with oxygen."
+            },
+            {
+                id: 71,
+                category: "Physical & Chemical Changes",
+                question: "Which process is NOT a chemical change?<br><small>(哪個過程不是化學變化？)</small>",
+                options: ["Photosynthesis", "Digestion", "Melting ice", "Rusting"],
+                correct: 2,
+                explanation: "冰融化是物理變化。Melting ice is a physical change."
+            },
+            {
+                id: 72,
+                category: "Physical & Chemical Changes",
+                question: "What is produced when iron rusts?<br><small>(鐵生鏽時產生什麼？)</small>",
+                options: ["Iron chloride", "Iron oxide", "Iron sulfide", "Pure iron"],
+                correct: 1,
+                explanation: "生鏽產生氧化鐵。Rust is iron oxide."
+            },
+            {
+                id: 73,
+                category: "Physical & Chemical Changes",
+                question: "Is cooking food a chemical change?<br><small>(烹飪食物是化學變化嗎？)</small>",
+                options: ["No, it's physical", "Yes, new substances form", "It depends", "Neither"],
+                correct: 1,
+                explanation: "烹飪會產生新物質。Cooking creates new substances."
+            },
+            {
+                id: 74,
+                category: "Physical & Chemical Changes",
+                question: "What happens when an egg is cooked?<br><small>(煮雞蛋時發生什麼？)</small>",
+                options: ["Only temperature changes", "Proteins change structure", "It becomes water", "Nothing changes"],
+                correct: 1,
+                explanation: "蛋白質受熱變性，結構改變。Proteins denature when heated."
+            },
+            {
+                id: 75,
+                category: "Physical & Chemical Changes",
+                question: "Can a chemical change be easily reversed?<br><small>(化學變化容易逆轉嗎？)</small>",
+                options: ["Always", "Usually", "Rarely", "Never"],
+                correct: 2,
+                explanation: "化學變化通常難以逆轉。Chemical changes are rarely reversible."
+            },
+            {
+                id: 76,
+                category: "Physical & Chemical Changes",
+                question: "What is fermentation?<br><small>(什麼是發酵？)</small>",
+                options: ["A physical change", "A chemical change by microorganisms", "A type of melting", "A type of freezing"],
+                correct: 1,
+                explanation: "發酵是微生物引起的化學變化。Fermentation is a chemical change by microorganisms."
+            },
+            {
+                id: 77,
+                category: "Physical & Chemical Changes",
+                question: "What gas is needed for combustion?<br><small>(燃燒需要什麼氣體？)</small>",
+                options: ["Nitrogen", "Carbon dioxide", "Oxygen", "Hydrogen"],
+                correct: 2,
+                explanation: "燃燒需要氧氣。Oxygen is needed for combustion."
+            },
+            {
+                id: 78,
+                category: "Physical & Chemical Changes",
+                question: "Is mixing salt and sand a chemical change?<br><small>(混合鹽和沙是化學變化嗎？)</small>",
+                options: ["Yes", "No, it's physical", "It depends on temperature", "Sometimes"],
+                correct: 1,
+                explanation: "混合不改變物質的化學性質。Mixing doesn't change chemical properties."
+            },
+            {
+                id: 79,
+                category: "Physical & Chemical Changes",
+                question: "What is released in an exothermic reaction?<br><small>(放熱反應釋放什麼？)</small>",
+                options: ["Cold", "Heat", "Light only", "Nothing"],
+                correct: 1,
+                explanation: "放熱反應釋放熱量。Exothermic reactions release heat."
+            },
+            {
+                id: 80,
+                category: "Physical & Chemical Changes",
+                question: "Which is an example of oxidation?<br><small>(哪個是氧化的例子？)</small>",
+                options: ["Water freezing", "Iron rusting", "Sugar dissolving", "Glass breaking"],
+                correct: 1,
+                explanation: "鐵生鏽是鐵與氧氣反應的氧化過程。Rusting is iron reacting with oxygen."
+            },
+
+            // Category 5: Separation Methods (Questions 81-100)
+            {
+                id: 81,
+                category: "Separation Methods",
+                question: "Best method to separate sand from water?<br><small>(分離沙和水的最佳方法？)</small>",
+                options: ["Evaporation (蒸發)", "Filtration (過濾)", "Magnetism (磁力)", "Distillation (蒸餾)"],
+                correct: 1,
+                explanation: "過濾可將不溶的固體與液體分開。Filtration separates insoluble solids from liquids."
+            },
+            {
+                id: 82,
+                category: "Separation Methods",
+                question: "Method to separate salt from seawater?<br><small>(從海水中分離鹽的方法？)</small>",
+                options: ["Evaporation (蒸發)", "Filtration (過濾)", "Magnetism (磁力)", "Sorting (分類)"],
+                correct: 0,
+                explanation: "蒸發可以將水蒸發掉，留下鹽。Evaporation removes water, leaving salt behind."
+            },
+            {
+                id: 83,
+                category: "Separation Methods",
+                question: "Method to separate different colored dyes?<br><small>(分離不同顏色染料的方法？)</small>",
+                options: ["Filtration (過濾)", "Evaporation (蒸發)", "Chromatography (色層分析法)", "Distillation (蒸餾)"],
+                correct: 2,
+                explanation: "色層分析法可根據顏色分離混合物。Chromatography separates mixtures based on color."
+            },
+            {
+                id: 84,
+                category: "Separation Methods",
+                question: "Method to get fresh water from seawater?<br><small>(從海水中獲取淡水的方法？)</small>",
+                options: ["Filtration (過濾)", "Chromatography (色層分析法)", "Distillation (蒸餾)", "Magnetism (磁力)"],
+                correct: 2,
+                explanation: "蒸餾可以將水蒸發後冷凝，得到純淨水。Distillation evaporates and condenses water to purify it."
+            },
+            {
+                id: 85,
+                category: "Separation Methods",
+                question: "Tool to measure volume of liquid?<br><small>(測量液體體積的工具？)</small>",
+                options: ["Ruler (尺子)", "Measuring cylinder (量筒)", "Thermometer (溫度計)", "Balance (天平)"],
+                correct: 1,
+                explanation: "量筒用於測量液體體積。A measuring cylinder is used to measure liquid volume."
+            },
+            {
+                id: 86,
+                category: "Separation Methods",
+                question: "Which method separates iron filings from sand?<br><small>(哪種方法分離鐵屑和沙？)</small>",
+                options: ["Filtration", "Evaporation", "Magnetism", "Distillation"],
+                correct: 2,
+                explanation: "磁力可以吸走鐵屑。Magnetism attracts iron filings."
+            },
+            {
+                id: 87,
+                category: "Separation Methods",
+                question: "What is decantation used for?<br><small>(傾析法用於？)</small>",
+                options: ["Separating dissolved solids", "Pouring off liquid from settled solids", "Separating colors", "Measuring volume"],
+                correct: 1,
+                explanation: "傾析是將液體從沉澱的固體中倒出。Decantation pours liquid away from settled solids."
+            },
+            {
+                id: 88,
+                category: "Separation Methods",
+                question: "Which method would you use to separate a mixture of sand and iron filings?<br><small>(如何分離沙和鐵屑的混合物？)</small>",
+                options: ["Use a filter", "Use a magnet", "Add water", "Heat it"],
+                correct: 1,
+                explanation: "磁鐵會吸走鐵屑，留下沙子。A magnet attracts iron, leaving sand behind."
+            },
+            {
+                id: 89,
+                category: "Separation Methods",
+                question: "How would you separate a mixture of salt and sand?<br><small>(如何分離鹽和沙的混合物？)</small>",
+                options: ["Use a magnet", "Add water, filter, then evaporate", "Heat only", "Use chromatography"],
+                correct: 1,
+                explanation: "加水溶解鹽，過濾掉沙，再蒸發得到鹽。Dissolve salt in water, filter sand, then evaporate."
+            },
+            {
+                id: 90,
+                category: "Separation Methods",
+                question: "What equipment is used for filtration?<br><small>(過濾用什麼設備？)</small>",
+                options: ["Only a beaker", "Filter paper and funnel", "Only a thermometer", "A magnet"],
+                correct: 1,
+                explanation: "過濾需要濾紙和漏斗。Filtration requires filter paper and a funnel."
+            },
+            {
+                id: 91,
+                category: "Separation Methods",
+                question: "Which method would separate alcohol and water?<br><small>(哪種方法分離酒精和水？)</small>",
+                options: ["Filtration", "Distillation", "Magnetism", "Evaporation"],
+                correct: 1,
+                explanation: "蒸餾利用不同沸點分離液體。Distillation uses different boiling points to separate liquids."
+            },
+            {
+                id: 92,
+                category: "Separation Methods",
+                question: "What is centrifugation used for?<br><small>(離心法用於？)</small>",
+                options: ["Separating based on density", "Changing colors", "Making solutions", "Measuring temperature"],
+                correct: 0,
+                explanation: "離心利用密度差分離物質。Centrifugation separates substances based on density differences."
+            },
+            {
+                id: 93,
+                category: "Separation Methods",
+                question: "Which method is used to separate cream from milk?<br><small>(哪種方法用於分離牛奶中的奶油？)</small>",
+                options: ["Filtration", "Centrifugation", "Evaporation", "Chromatography"],
+                correct: 1,
+                explanation: "離心可以分離不同密度的成分。Centrifugation separates components of different densities."
+            },
+            {
+                id: 94,
+                category: "Separation Methods",
+                question: "What is sieving used for?<br><small>(篩分用於？)</small>",
+                options: ["Separating solids of different sizes", "Dissolving substances", "Separating liquids", "Measuring mass"],
+                correct: 0,
+                explanation: "篩分根據大小分離固體。Sieving separates solids by size."
+            },
+            {
+                id: 95,
+                category: "Separation Methods",
+                question: "Which method would separate stones from rice?<br><small>(哪種方法分離石頭和米？)</small>",
+                options: ["Hand picking or sieving", "Evaporation", "Distillation", "Chromatography"],
+                correct: 0,
+                explanation: "手選或篩分可以根據大小和形狀分離。Hand picking or sieving separates by size and shape."
+            },
+            {
+                id: 96,
+                category: "Separation Methods",
+                question: "What is the first step in separating sand, salt, and water?<br><small>(分離沙、鹽和水的第一步是？)</small>",
+                options: ["Evaporate all water", "Filter to remove sand", "Add more salt", "Freeze the mixture"],
+                correct: 1,
+                explanation: "先過濾掉不溶的沙。First filter out the insoluble sand."
+            },
+            {
+                id: 97,
+                category: "Separation Methods",
+                question: "Which separation method uses heat?<br><small>(哪種分離方法使用熱？)</small>",
+                options: ["Filtration only", "Evaporation and distillation", "Magnetism only", "Sieving only"],
+                correct: 1,
+                explanation: "蒸發和蒸餾都需要加熱。Evaporation and distillation both require heat."
+            },
+            {
+                id: 98,
+                category: "Separation Methods",
+                question: "What is the purpose of filter paper in filtration?<br><small>(濾紙在過濾中的作用是？)</small>",
+                options: ["To dissolve solids", "To trap solid particles", "To heat the liquid", "To cool the mixture"],
+                correct: 1,
+                explanation: "濾紙的細孔捕捉固體粒子。Filter paper traps solid particles with its tiny holes."
+            },
+            {
+                id: 99,
+                category: "Separation Methods",
+                question: "Which method would you use to separate pebbles from water?<br><small>(如何分離鵝卵石和水？)</small>",
+                options: ["Evaporation", "Filtration or decantation", "Distillation", "Chromatography"],
+                correct: 1,
+                explanation: "過濾或傾析都可以分離大顆粒固體。Filtration or decantation separates large particles."
+            },
+            {
+                id: 100,
+                category: "Separation Methods",
+                question: "What is the final step in obtaining salt from seawater?<br><small>(從海水中獲取鹽的最後一步是？)</small>",
+                options: ["Filtration", "Evaporation of water", "Adding more water", "Cooling"],
+                correct: 1,
+                explanation: "蒸發掉水分後留下鹽。Evaporating water leaves salt behind."
+            }
+        ];
+
+        // User answers storage
+        let userAnswers = {};
+
+        // Initialize quiz
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${index + 1} of 100 | ${q.category}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIndex) => `
+                            <div class="option" onclick="selectOption(${index}, ${optIndex})" data-q="${index}" data-opt="${optIndex}">
+                                ${String.fromCharCode(65 + optIndex)}. ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="answer-explanation" id="explanation-${index}">
+                        <strong>答案 Answer:</strong> ${String.fromCharCode(65 + q.correct)}<br>
+                        ${q.explanation}
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+            
+            updateProgress();
+        }
+
+        // Select option
+        function selectOption(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            
+            // Update UI
+            const options = document.querySelectorAll(`[data-q="${questionIndex}"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            
+            updateProgress();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            const progress = (answered / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Submit quiz
+        function submitQuiz() {
+            const answered = Object.keys(userAnswers).length;
+            if (answered < questions.length) {
+                const confirmSubmit = confirm(`You have answered ${answered} out of 100 questions. Are you sure you want to submit?\n\n您已回答了 ${answered}/100 題。確定要提交嗎？`);
+                if (!confirmSubmit) return;
+            }
+            
+            // Calculate scores
+            let totalCorrect = 0;
+            let categoryScores = {
+                "States of Matter": { correct: 0, total: 0 },
+                "Mixtures & Solutions": { correct: 0, total: 0 },
+                "Materials & Properties": { correct: 0, total: 0 },
+                "Physical & Chemical Changes": { correct: 0, total: 0 },
+                "Separation Methods": { correct: 0, total: 0 }
+            };
+            
+            questions.forEach((q, index) => {
+                const category = q.category;
+                categoryScores[category].total++;
+                
+                if (userAnswers[index] === q.correct) {
+                    totalCorrect++;
+                    categoryScores[category].correct++;
+                }
+                
+                // Show correct/incorrect
+                const options = document.querySelectorAll(`[data-q="${index}"]`);
+                options.forEach((opt, optIndex) => {
+                    opt.classList.remove('selected');
+                    if (optIndex === q.correct) {
+                        opt.classList.add('correct');
+                    } else if (optIndex === userAnswers[index] && optIndex !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                    opt.onclick = null;
+                    opt.style.cursor = 'default';
+                });
+                
+                // Show explanation
+                document.getElementById(`explanation-${index}`).classList.add('show');
+            });
+            
+            // Show results
+            const percentage = Math.round((totalCorrect / questions.length) * 100);
+            document.getElementById('scoreCircle').textContent = percentage + '%';
+            document.getElementById('scoreText').textContent = `You answered ${totalCorrect}/100 questions correctly | 你答對了 ${totalCorrect}/100 題`;
+            
+            // Update category scores
+            document.getElementById('cat1Score').textContent = `${categoryScores["States of Matter"].correct}/20`;
+            document.getElementById('cat2Score').textContent = `${categoryScores["Mixtures & Solutions"].correct}/20`;
+            document.getElementById('cat3Score').textContent = `${categoryScores["Materials & Properties"].correct}/20`;
+            document.getElementById('cat4Score').textContent = `${categoryScores["Physical & Chemical Changes"].correct}/20`;
+            document.getElementById('cat5Score').textContent = `${categoryScores["Separation Methods"].correct}/20`;
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Reset quiz
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('results').classList.remove('show');
+            initQuiz();
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize on load
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
