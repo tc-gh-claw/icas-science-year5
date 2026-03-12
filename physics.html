@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICAS Physics Year 5 - 100 Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #fff;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .quiz-container {
+            padding: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .question-chinese {
+            font-size: 15px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .results {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .results p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .category-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .category-score {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .category-score h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .category-score p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔬 ICAS Physics Year 5</h1>
+            <p>Paper C | 100 Questions | 5 Categories</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <!-- Questions will be generated here -->
+        </div>
+
+        <div class="controls" id="controls">
+            <button class="btn btn-secondary" onclick="resetQuiz()">重置</button>
+            <button class="btn btn-primary" onclick="submitQuiz()">提交答案</button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="score-circle" id="scoreCircle">0</div>
+            <h2>測驗完成！</h2>
+            <p id="scoreText">你答對了 0/100 題</p>
+            
+            <div class="category-scores">
+                <div class="category-score">
+                    <h4>Forces & Motion</h4>
+                    <p id="cat1Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Energy</h4>
+                    <p id="cat2Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Light & Sound</h4>
+                    <p id="cat3Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Electricity & Magnetism</h4>
+                    <p id="cat4Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Simple Machines</h4>
+                    <p id="cat5Score">0/20</p>
+                </div>
+            </div>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">🏠 主頁</a>
+                <a href="math.html" class="nav-link">🧮 Mathematics</a>
+                <a href="biology.html" class="nav-link">🧬 Biology</a>
+                <a href="chemistry.html" class="nav-link">⚗️ Chemistry</a>
+                <a href="earth.html" class="nav-link">🌍 Earth Science</a>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top: 20px;">再試一次</button>
+        </div>
+    </div>
+
+    <script>
+        // Question bank - 100 physics questions organized by category
+        const questions = [
+            // Category 1: Forces & Motion (Questions 1-20)
+            {
+                id: 1,
+                category: "Forces & Motion",
+                question: "What force pulls objects towards Earth?",
+                questionChinese: "什麼力量將物體拉向地球？",
+                options: ["Magnetism (磁力)", "Gravity (重力)", "Friction (摩擦力)", "Electricity (電力)"],
+                correct: 1
+            },
+            {
+                id: 2,
+                category: "Forces & Motion",
+                question: "Which surface creates most friction?",
+                questionChinese: "哪種表面產生最大摩擦力？",
+                options: ["Rough concrete (粗糙混凝土)", "Ice (冰)", "Polished wood (拋光木材)", "Oiled metal (塗油金屬)"],
+                correct: 0
+            },
+            {
+                id: 3,
+                category: "Forces & Motion",
+                question: "Unit of force?",
+                questionChinese: "力的單位是？",
+                options: ["Kilogram (公斤)", "Meter (米)", "Second (秒)", "Newton (牛頓)"],
+                correct: 3
+            },
+            {
+                id: 4,
+                category: "Forces & Motion",
+                question: "Which force slows down moving objects?",
+                questionChinese: "哪種力會減慢運動物體的速度？",
+                options: ["Gravity (重力)", "Friction (摩擦力)", "Magnetism (磁力)", "Electrical force (電力)"],
+                correct: 1
+            },
+            {
+                id: 5,
+                category: "Forces & Motion",
+                question: "What is the relationship between force, mass, and acceleration?",
+                questionChinese: "力、質量、加速度的關係是？",
+                options: ["F = m × v", "F = m ÷ a", "F = a ÷ m", "F = m × a"],
+                correct: 3
+            },
+            {
+                id: 6,
+                category: "Forces & Motion",
+                question: "What happens to an object when balanced forces act on it?",
+                questionChinese: "當平衡力作用在物體上時會怎樣？",
+                options: ["It speeds up (加速)", "It slows down (減速)", "It stays at rest or moves at constant speed (保持靜止或等速運動)", "It changes direction (改變方向)"],
+                correct: 2
+            },
+            {
+                id: 7,
+                category: "Forces & Motion",
+                question: "Which planet has the strongest gravity?",
+                questionChinese: "哪個行星的重力最強？",
+                options: ["Jupiter (木星)", "Mars (火星)", "Venus (金星)", "Mercury (水星)"],
+                correct: 0
+            },
+            {
+                id: 8,
+                category: "Forces & Motion",
+                question: "What is weight?",
+                questionChinese: "重量是什麼？",
+                options: ["Amount of matter in an object (物體中的物質量)", "Force of gravity on an object (作用在物體上的重力)", "Volume of an object (物體的體積)", "Density of an object (物體的密度)"],
+                correct: 1
+            },
+            {
+                id: 9,
+                category: "Forces & Motion",
+                question: "Which would float in water?",
+                questionChinese: "哪個會浮在水面上？",
+                options: ["Wooden block (木塊)", "Iron nail (鐵釘)", "Gold coin (金幣)", "Stone (石頭)"],
+                correct: 0
+            },
+            {
+                id: 10,
+                category: "Forces & Motion",
+                question: "What is air resistance?",
+                questionChinese: "什麼是空氣阻力？",
+                options: ["Force that pushes objects up (向上推物體的力)", "Force that opposes motion through air (反對在空氣中運動的力)", "Force that pulls objects down (向下拉物體的力)", "Force that makes objects magnetic (使物體有磁性的力)"],
+                correct: 1
+            },
+            {
+                id: 11,
+                category: "Forces & Motion",
+                question: "What causes an object to accelerate?",
+                questionChinese: "什麼導致物體加速？",
+                options: ["Balanced forces (平衡力)", "No forces (沒有力)", "Unbalanced forces (不平衡力)", "Zero gravity (零重力)"],
+                correct: 2
+            },
+            {
+                id: 12,
+                category: "Forces & Motion",
+                question: "Which has more inertia - a bowling ball or a tennis ball?",
+                questionChinese: "哪個慣性更大——保齡球還是網球？",
+                options: ["Tennis ball (網球)", "Bowling ball (保齡球)", "They have the same (相同)", "It depends on speed (取決於速度)"],
+                correct: 1
+            },
+            {
+                id: 13,
+                category: "Forces & Motion",
+                question: "What is the speed formula?",
+                questionChinese: "速度的公式是什麼？",
+                options: ["Speed = distance × time", "Speed = distance ÷ time", "Speed = time ÷ distance", "Speed = mass × velocity"],
+                correct: 1
+            },
+            {
+                id: 14,
+                category: "Forces & Motion",
+                question: "If a car travels 120 km in 2 hours, what is its average speed?",
+                questionChinese: "如果汽車2小時行駛120公里，平均速度是多少？",
+                options: ["60 km/h", "120 km/h", "240 km/h", "30 km/h"],
+                correct: 0
+            },
+            {
+                id: 15,
+                category: "Forces & Motion",
+                question: "What is the direction of gravitational force?",
+                questionChinese: "重力的方向是？",
+                options: ["Upward (向上)", "Downward (向下)", "Sideways (側向)", "It varies (變化)"],
+                correct: 1
+            },
+            {
+                id: 16,
+                category: "Forces & Motion",
+                question: "What is terminal velocity?",
+                questionChinese: "什麼是終端速度？",
+                options: ["Maximum speed an object can reach (物體能達到的最大速度)", "Speed of light (光速)", "Speed of sound (音速)", "Zero speed (零速度)"],
+                correct: 0
+            },
+            {
+                id: 17,
+                category: "Forces & Motion",
+                question: "Why do astronauts appear weightless in space?",
+                questionChinese: "為什麼太空人看起來沒有重量？",
+                options: ["There is no gravity in space (太空中沒有重力)", "They are falling freely around Earth (他們在地球周圍自由落下)", "Space has no air (太空沒有空氣)", "They are very far from Earth (他們離地球很遠)"],
+                correct: 1
+            },
+            {
+                id: 18,
+                category: "Forces & Motion",
+                question: "What is buoyant force?",
+                questionChinese: "什麼是浮力？",
+                options: ["Force that pulls objects down (向下拉物體的力)", "Upward force exerted by fluids (流體施加的向上力)", "Force between two magnets (兩個磁鐵之間的力)", "Force of friction (摩擦力)"],
+                correct: 1
+            },
+            {
+                id: 19,
+                category: "Forces & Motion",
+                question: "What happens when you increase the surface area of an object moving through air?",
+                questionChinese: "當增加在空氣中運動物體的表面積時會怎樣？",
+                options: ["Air resistance decreases (空氣阻力減少)", "Air resistance increases (空氣阻力增加)", "Speed increases (速度增加)", "Gravity decreases (重力減少)"],
+                correct: 1
+            },
+            {
+                id: 20,
+                category: "Forces & Motion",
+                question: "What instrument measures force?",
+                questionChinese: "什麼儀器測量力？",
+                options: ["Thermometer (溫度計)", "Spring scale (彈簧秤)", "Ruler (尺子)", "Stopwatch (秒錶)"],
+                correct: 1
+            },
+
+            // Category 2: Energy (Questions 21-40)
+            {
+                id: 21,
+                category: "Energy",
+                question: "What is the energy of a moving car?",
+                questionChinese: "行駛中汽車的能量是？",
+                options: ["Potential energy (位能)", "Heat energy (熱能)", "Kinetic energy (動能)", "Chemical energy (化學能)"],
+                correct: 2
+            },
+            {
+                id: 22,
+                category: "Energy",
+                question: "What is energy stored in a stretched spring?",
+                questionChinese: "拉伸彈簧中儲存的能量是？",
+                options: ["Kinetic energy (動能)", "Elastic potential energy (彈性位能)", "Thermal energy (熱能)", "Electrical energy (電能)"],
+                correct: 1
+            },
+            {
+                id: 23,
+                category: "Energy",
+                question: "Which is NOT a form of energy?",
+                questionChinese: "哪個不是能量形式？",
+                options: ["Light (光)", "Sound (聲音)", "Matter (物質)", "Heat (熱)"],
+                correct: 2
+            },
+            {
+                id: 24,
+                category: "Energy",
+                question: "What is the primary source of energy for Earth's ecosystems?",
+                questionChinese: "地球生態系統的主要能量來源是？",
+                options: ["Moon (月球)", "Volcanoes (火山)", "Earth's core (地核)", "Sun (太陽)"],
+                correct: 3
+            },
+            {
+                id: 25,
+                category: "Energy",
+                question: "What type of energy is stored in food?",
+                questionChinese: "食物中儲存的是什麼能量？",
+                options: ["Chemical energy (化學能)", "Nuclear energy (核能)", "Solar energy (太陽能)", "Kinetic energy (動能)"],
+                correct: 0
+            },
+            {
+                id: 26,
+                category: "Energy",
+                question: "What is the energy of position called?",
+                questionChinese: "位置的能量稱為？",
+                options: ["Kinetic energy (動能)", "Thermal energy (熱能)", "Potential energy (位能)", "Electrical energy (電能)"],
+                correct: 2
+            },
+            {
+                id: 27,
+                category: "Energy",
+                question: "Which energy transformation occurs in a solar cell?",
+                questionChinese: "太陽能電池中發生什麼能量轉換？",
+                options: ["Light to electrical (光轉電)", "Electrical to light (電轉光)", "Heat to light (熱轉光)", "Chemical to electrical (化學轉電)"],
+                correct: 0
+            },
+            {
+                id: 28,
+                category: "Energy",
+                question: "What happens to energy when a ball bounces?",
+                questionChinese: "球彈跳時能量會怎樣？",
+                options: ["It is lost completely (完全消失)", "Some changes to heat (部分變成熱能)", "It doubles (翻倍)", "It becomes mass (變成質量)"],
+                correct: 1
+            },
+            {
+                id: 29,
+                category: "Energy",
+                question: "What type of energy does a rolling ball have?",
+                questionChinese: "滾動的球有什麼能量？",
+                options: ["Only potential energy (只有位能)", "Only kinetic energy (只有動能)", "Both kinetic and potential (動能和位能都有)", "Neither (都沒有)"],
+                correct: 2
+            },
+            {
+                id: 30,
+                category: "Energy",
+                question: "Which appliance converts electrical energy to heat?",
+                questionChinese: "哪個電器將電能轉換成熱能？",
+                options: ["Fan (風扇)", "Toaster (烤麵包機)", "Radio (收音機)", "Lamp (燈)"],
+                correct: 1
+            },
+            {
+                id: 31,
+                category: "Energy",
+                question: "What is renewable energy?",
+                questionChinese: "什麼是可再生能源？",
+                options: ["Energy from fossil fuels (化石燃料的能量)", "Energy that can be replenished naturally (可自然補充的能量)", "Nuclear energy (核能)", "Energy that runs out (會耗盡的能量)"],
+                correct: 1
+            },
+            {
+                id: 32,
+                category: "Energy",
+                question: "Which is a renewable energy source?",
+                questionChinese: "哪個是可再生能源？",
+                options: ["Coal (煤)", "Oil (石油)", "Solar power (太陽能)", "Natural gas (天然氣)"],
+                correct: 2
+            },
+            {
+                id: 33,
+                category: "Energy",
+                question: "What energy transformation happens in a flashlight?",
+                questionChinese: "手電筒中發生什麼能量轉換？",
+                options: ["Chemical to electrical to light (化學→電→光)", "Light to electrical (光轉電)", "Heat to light (熱轉光)", "Nuclear to light (核能轉光)"],
+                correct: 0
+            },
+            {
+                id: 34,
+                category: "Energy",
+                question: "What is the Law of Conservation of Energy?",
+                questionChinese: "能量守恆定律是什麼？",
+                options: ["Energy can be created (能量可以被創造)", "Energy can be destroyed (能量可以被毀滅)", "Energy cannot be created or destroyed (能量不能被創造或毀滅)", "Energy is always lost (能量總是損失)"],
+                correct: 2
+            },
+            {
+                id: 35,
+                category: "Energy",
+                question: "Where does a roller coaster have the most potential energy?",
+                questionChinese: "雲霄飛車在哪裡位能最大？",
+                options: ["At the bottom (底部)", "At the top of the highest hill (最高山頂)", "In the middle (中間)", "Going fastest (最快時)"],
+                correct: 1
+            },
+            {
+                id: 36,
+                category: "Energy",
+                question: "What energy transfer occurs when you rub your hands together?",
+                questionChinese: "摩擦雙手時發生什麼能量轉移？",
+                options: ["Kinetic to thermal (動能轉熱能)", "Thermal to kinetic (熱能轉動能)", "Chemical to light (化學轉光)", "Electrical to sound (電轉聲)"],
+                correct: 0
+            },
+            {
+                id: 37,
+                category: "Energy",
+                question: "What type of energy is stored in batteries?",
+                questionChinese: "電池中儲存什麼類型的能量？",
+                options: ["Kinetic energy (動能)", "Chemical energy (化學能)", "Nuclear energy (核能)", "Solar energy (太陽能)"],
+                correct: 1
+            },
+            {
+                id: 38,
+                category: "Energy",
+                question: "Which material is a good conductor of heat?",
+                questionChinese: "哪種材料是良好的熱導體？",
+                options: ["Plastic (塑膠)", "Wood (木頭)", "Copper (銅)", "Rubber (橡膠)"],
+                correct: 2
+            },
+            {
+                id: 39,
+                category: "Energy",
+                question: "What is heat transfer through direct contact called?",
+                questionChinese: "通過直接接觸傳熱稱為？",
+                options: ["Radiation (輻射)", "Conduction (傳導)", "Convection (對流)", "Insulation (隔熱)"],
+                correct: 1
+            },
+            {
+                id: 40,
+                category: "Energy",
+                question: "What causes ocean tides?",
+                questionChinese: "什麼造成海洋潮汐？",
+                options: ["Sun only (只有太陽)", "Gravitational pull of Moon and Sun (月球和太陽的引力)", "Wind (風)", "Earthquakes (地震)"],
+                correct: 1
+            },
+
+            // Category 3: Light & Sound (Questions 41-60)
+            {
+                id: 41,
+                category: "Light & Sound",
+                question: "What happens when light hits a mirror?",
+                questionChinese: "光線照射鏡子時會？",
+                options: ["It reflects (反射)", "It is absorbed (被吸收)", "It disappears (消失)", "It changes color (變色)"],
+                correct: 0
+            },
+            {
+                id: 42,
+                category: "Light & Sound",
+                question: "Materials that light cannot pass through are called?",
+                questionChinese: "光無法穿透的材料稱為？",
+                options: ["Transparent (透明)", "Translucent (半透明)", "Reflective (反光)", "Opaque (不透明)"],
+                correct: 3
+            },
+            {
+                id: 43,
+                category: "Light & Sound",
+                question: "How does sound travel?",
+                questionChinese: "聲音如何傳播？",
+                options: ["Through empty space (通過真空)", "Through vibrations in a medium (通過介質振動)", "Through light waves (通過光波)", "Through magnetic fields (通過磁場)"],
+                correct: 1
+            },
+            {
+                id: 44,
+                category: "Light & Sound",
+                question: "Which color has the longest wavelength?",
+                questionChinese: "哪種顏色光波長最長？",
+                options: ["Blue (藍色)", "Red (紅色)", "Green (綠色)", "Violet (紫色)"],
+                correct: 1
+            },
+            {
+                id: 45,
+                category: "Light & Sound",
+                question: "What happens to pitch when frequency increases?",
+                questionChinese: "頻率增加時音調會？",
+                options: ["Becomes lower (變低)", "Stays the same (不變)", "Becomes higher (變高)", "Becomes silent (無聲)"],
+                correct: 2
+            },
+            {
+                id: 46,
+                category: "Light & Sound",
+                question: "Approximate speed of light?",
+                questionChinese: "光速大約是？",
+                options: ["300,000 km/s", "100 km/s", "1,000 km/s", "30 km/s"],
+                correct: 0
+            },
+            {
+                id: 47,
+                category: "Light & Sound",
+                question: "What causes day and night?",
+                questionChinese: "什麼造成晝夜？",
+                options: ["Earth rotating on its axis (地球自轉)", "Earth moving around Sun (地球繞太陽)", "Moon blocking Sun (月球遮太陽)", "Sun moving (太陽移動)"],
+                correct: 0
+            },
+            {
+                id: 48,
+                category: "Light & Sound",
+                question: "What happens to shadow when light moves closer?",
+                questionChinese: "光源靠近時影子會？",
+                options: ["Becomes smaller (變小)", "Disappears (消失)", "Becomes sharper (更清晰)", "Becomes larger (變大)"],
+                correct: 3
+            },
+            {
+                id: 49,
+                category: "Light & Sound",
+                question: "Bending of light passing between media is called?",
+                questionChinese: "光從一種介質進入另一種時的彎曲稱為？",
+                options: ["Reflection (反射)", "Absorption (吸收)", "Refraction (折射)", "Diffraction (繞射)"],
+                correct: 2
+            },
+            {
+                id: 50,
+                category: "Light & Sound",
+                question: "Approximate speed of sound in air?",
+                questionChinese: "空氣中聲音速度大約？",
+                options: ["30 m/s", "100 m/s", "340 m/s", "1,000 m/s"],
+                correct: 2
+            },
+            {
+                id: 51,
+                category: "Light & Sound",
+                question: "Which mirror makes objects appear larger?",
+                questionChinese: "哪種鏡子使物體看起來更大？",
+                options: ["Plane mirror (平面鏡)", "Concave mirror (凹面鏡)", "Convex mirror (凸面鏡)", "Two-way mirror (雙向鏡)"],
+                correct: 1
+            },
+            {
+                id: 52,
+                category: "Light & Sound",
+                question: "What color is produced when all light colors are mixed?",
+                questionChinese: "所有光顏色混合產生什麼顏色？",
+                options: ["Black (黑色)", "Red (紅色)", "White (白色)", "Brown (棕色)"],
+                correct: 2
+            },
+            {
+                id: 53,
+                category: "Light & Sound",
+                question: "What happens to light when it passes through a prism?",
+                questionChinese: "光通過棱鏡時會怎樣？",
+                options: ["It speeds up (加速)", "It slows down and splits into colors (減速並分散成顏色)", "It stops (停止)", "It becomes invisible (變得看不見)"],
+                correct: 1
+            },
+            {
+                id: 54,
+                category: "Light & Sound",
+                question: "Which travels faster - light or sound?",
+                questionChinese: "哪個傳播更快——光還是聲音？",
+                options: ["Light (光)", "Sound (聲音)", "They travel at same speed (速度相同)", "It depends on the medium (取決於介質)"],
+                correct: 0
+            },
+            {
+                id: 55,
+                category: "Light & Sound",
+                question: "What is an echo?",
+                questionChinese: "什麼是回聲？",
+                options: ["Sound that is absorbed (被吸收的聲音)", "Sound that bounces back (反射回來的聲音)", "Sound that disappears (消失的聲音)", "Very high pitch sound (非常高的音調)"],
+                correct: 1
+            },
+            {
+                id: 56,
+                category: "Light & Sound",
+                question: "What does a convex lens do to light rays?",
+                questionChinese: "凸透鏡對光線有什麼作用？",
+                options: ["Spreads them apart (散開)", "Brings them together (聚集)", "Absorbs them (吸收)", "Changes their color (改變顏色)"],
+                correct: 1
+            },
+            {
+                id: 57,
+                category: "Light & Sound",
+                question: "Why is the sky blue?",
+                questionChinese: "為什麼天空是藍色的？",
+                options: ["Blue light is scattered more (藍光散射更多)", "The ocean reflects up (海洋反射)", "The sun is blue (太陽是藍色的)", "Air is blue (空氣是藍色的)"],
+                correct: 0
+            },
+            {
+                id: 58,
+                category: "Light & Sound",
+                question: "What happens to the wavelength of sound when pitch increases?",
+                questionChinese: "音調增加時聲波波長會怎樣？",
+                options: ["It becomes longer (變長)", "It becomes shorter (變短)", "It stays the same (不變)", "It becomes zero (變零)"],
+                correct: 1
+            },
+            {
+                id: 59,
+                category: "Light & Sound",
+                question: "Which material reflects light best?",
+                questionChinese: "哪種材料反光最好？",
+                options: ["Black paper (黑紙)", "Mirror (鏡子)", "Frosted glass (磨砂玻璃)", "Cardboard (紙板)"],
+                correct: 1
+            },
+            {
+                id: 60,
+                category: "Light & Sound",
+                question: "Can sound travel through a vacuum?",
+                questionChinese: "聲音能在真空中傳播嗎？",
+                options: ["Yes, easily (可以，很容易)", "Yes, but slowly (可以，但很慢)", "No, it needs a medium (不能，需要介質)", "Only low sounds (只有低頻聲音)"],
+                correct: 2
+            },
+
+            // Category 4: Electricity & Magnetism (Questions 61-80)
+            {
+                id: 61,
+                category: "Electricity & Magnetism",
+                question: "What is the unit of electrical resistance?",
+                questionChinese: "電阻的單位是？",
+                options: ["Volt (伏特)", "Ampere (安培)", "Ohm (歐姆)", "Watt (瓦特)"],
+                correct: 2
+            },
+            {
+                id: 62,
+                category: "Electricity & Magnetism",
+                question: "What type of circuit has only one path for current?",
+                questionChinese: "只有一條電流路徑的電路是？",
+                options: ["Parallel circuit (並聯)", "Series circuit (串聯)", "Short circuit (短路)", "Open circuit (開路)"],
+                correct: 1
+            },
+            {
+                id: 63,
+                category: "Electricity & Magnetism",
+                question: "What happens to current if voltage increases?",
+                questionChinese: "電壓增加時電流會？",
+                options: ["Decreases (減少)", "Stays same (不變)", "Increases (增加)", "Becomes zero (變零)"],
+                correct: 2
+            },
+            {
+                id: 64,
+                category: "Electricity & Magnetism",
+                question: "Which material is a good conductor of electricity?",
+                questionChinese: "哪種材料是良好的電導體？",
+                options: ["Wood (木頭)", "Plastic (塑膠)", "Copper (銅)", "Rubber (橡膠)"],
+                correct: 2
+            },
+            {
+                id: 65,
+                category: "Electricity & Magnetism",
+                question: "What is the unit of electric current?",
+                questionChinese: "電流的單位是？",
+                options: ["Volt (伏特)", "Ampere (安培)", "Ohm (歐姆)", "Watt (瓦特)"],
+                correct: 1
+            },
+            {
+                id: 66,
+                category: "Electricity & Magnetism",
+                question: "What happens when like poles of magnets are brought together?",
+                questionChinese: "同性磁極靠近時會怎樣？",
+                options: ["They attract (相吸)", "They repel (相斥)", "Nothing happens (沒事)", "They lose magnetism (失去磁性)"],
+                correct: 1
+            },
+            {
+                id: 67,
+                category: "Electricity & Magnetism",
+                question: "What is the unit of voltage?",
+                questionChinese: "電壓的單位是？",
+                options: ["Volt (伏特)", "Ampere (安培)", "Ohm (歐姆)", "Joule (焦耳)"],
+                correct: 0
+            },
+            {
+                id: 68,
+                category: "Electricity & Magnetism",
+                question: "Which metal is attracted to magnets?",
+                questionChinese: "哪種金屬會被磁鐵吸引？",
+                options: ["Aluminum (鋁)", "Iron (鐵)", "Copper (銅)", "Gold (金)"],
+                correct: 1
+            },
+            {
+                id: 69,
+                category: "Electricity & Magnetism",
+                question: "What is an electromagnet?",
+                questionChinese: "什麼是電磁鐵？",
+                options: ["A permanent magnet (永久磁鐵)", "A magnet made by electric current (電流產生的磁鐵)", "A natural magnet (天然磁鐵)", "A very strong permanent magnet (很強的永久磁鐵)"],
+                correct: 1
+            },
+            {
+                id: 70,
+                category: "Electricity & Magnetism",
+                question: "What is the purpose of a switch in a circuit?",
+                questionChinese: "電路中開關的作用是？",
+                options: ["To increase voltage (增加電壓)", "To open or close the circuit (開啟或關閉電路)", "To measure current (測量電流)", "To store energy (儲存能量)"],
+                correct: 1
+            },
+            {
+                id: 71,
+                category: "Electricity & Magnetism",
+                question: "What happens in a parallel circuit if one bulb burns out?",
+                questionChinese: "並聯電路中如果一個燈泡燒壞會怎樣？",
+                options: ["All bulbs go out (所有燈泡熄滅)", "Other bulbs stay on (其他燈泡繼續亮)", "Circuit explodes (電路爆炸)", "Battery drains faster (電池更快耗盡)"],
+                correct: 1
+            },
+            {
+                id: 72,
+                category: "Electricity & Magnetism",
+                question: "What is static electricity?",
+                questionChinese: "什麼是靜電？",
+                options: ["Electricity that flows continuously (連續流動的電)", "Buildup of electric charge on an object (物體上的電荷積累)", "Electricity from batteries (電池的電)", "Very fast electricity (非常快的電)"],
+                correct: 1
+            },
+            {
+                id: 73,
+                category: "Electricity & Magnetism",
+                question: "Which component stores electrical energy?",
+                questionChinese: "哪個元件儲存電能？",
+                options: ["Resistor (電阻)", "Switch (開關)", "Capacitor/battery (電容/電池)", "Fuse (保險絲)"],
+                correct: 2
+            },
+            {
+                id: 74,
+                category: "Electricity & Magnetism",
+                question: "What is the Earth's magnetic field used for?",
+                questionChinese: "地球磁場用於什麼？",
+                options: ["Generating electricity (發電)", "Navigation with compasses (指南針導航)", "Heating the planet (加熱地球)", "Creating wind (創造風)"],
+                correct: 1
+            },
+            {
+                id: 75,
+                category: "Electricity & Magnetism",
+                question: "What is the unit of electrical power?",
+                questionChinese: "電功率的單位是？",
+                options: ["Volt (伏特)", "Ampere (安培)", "Watt (瓦特)", "Ohm (歐姆)"],
+                correct: 2
+            },
+            {
+                id: 76,
+                category: "Electricity & Magnetism",
+                question: "What material is used for electrical wires?",
+                questionChinese: "電線用什麼材料製成？",
+                options: ["Plastic (塑膠)", "Copper (銅)", "Wood (木頭)", "Glass (玻璃)"],
+                correct: 1
+            },
+            {
+                id: 77,
+                category: "Electricity & Magnetism",
+                question: "Why is plastic used to coat electrical wires?",
+                questionChinese: "為什麼電線要用塑料包裹？",
+                options: ["It conducts electricity well (導電性好)", "It is an insulator (它是絕緣體)", "It makes wires stronger (使電線更強)", "It is cheaper (更便宜)"],
+                correct: 1
+            },
+            {
+                id: 78,
+                category: "Electricity & Magnetism",
+                question: "What happens when you increase the number of coils in an electromagnet?",
+                questionChinese: "增加電磁鐵的線圈數會怎樣？",
+                options: ["It becomes weaker (變弱)", "It becomes stronger (變強)", "Nothing changes (沒變化)", "It stops working (停止運作)"],
+                correct: 1
+            },
+            {
+                id: 79,
+                category: "Electricity & Magnetism",
+                question: "What is the function of a fuse?",
+                questionChinese: "保險絲的作用是？",
+                options: ["To increase current (增加電流)", "To protect circuit from too much current (保護電路免受過大電流)", "To store electricity (儲存電)", "To change voltage (改變電壓)"],
+                correct: 1
+            },
+            {
+                id: 80,
+                category: "Electricity & Magnetism",
+                question: "Which has more resistance - a thick wire or thin wire of same material?",
+                questionChinese: "相同材料的粗線和細線哪個電阻更大？",
+                options: ["Thick wire (粗線)", "Thin wire (細線)", "They are the same (相同)", "It depends on length only (只取決於長度)"],
+                correct: 1
+            },
+
+            // Category 5: Simple Machines (Questions 81-100)
+            {
+                id: 81,
+                category: "Simple Machines",
+                question: "What simple machine is a seesaw?",
+                questionChinese: "蹺蹺板是什麼簡單機械？",
+                options: ["Pulley (滑輪)", "Inclined plane (斜面)", "Lever (槓桿)", "Wheel and axle (輪軸)"],
+                correct: 2
+            },
+            {
+                id: 82,
+                category: "Simple Machines",
+                question: "Which simple machine makes it easier to move objects over a longer distance?",
+                questionChinese: "哪種簡單機械使物體更容易通過更長距離移動？",
+                options: ["Lever (槓桿)", "Pulley (滑輪)", "Wheel and axle (輪軸)", "Inclined plane (斜面)"],
+                correct: 3
+            },
+            {
+                id: 83,
+                category: "Simple Machines",
+                question: "What tool uses a lever to lift heavy cars?",
+                questionChinese: "什麼工具使用槓桿舉起重車？",
+                options: ["Hydraulic jack (液壓千斤頂)", "Hammer (錘子)", "Screw (螺絲)", "Wheel (輪子)"],
+                correct: 0
+            },
+            {
+                id: 84,
+                category: "Simple Machines",
+                question: "What is a screw an example of?",
+                questionChinese: "螺絲是什麼的例子？",
+                options: ["Lever (槓桿)", "Inclined plane wrapped around a cylinder (圍繞圓柱的斜面)", "Pulley (滑輪)", "Wheel and axle (輪軸)"],
+                correct: 1
+            },
+            {
+                id: 85,
+                category: "Simple Machines",
+                question: "What simple machine do scissors use?",
+                questionChinese: "剪刀使用什麼簡單機械？",
+                options: ["Only a lever (只有槓桿)", "Only a wedge (只有楔子)", "Lever and wedge (槓桿和楔子)", "Pulley and wheel (滑輪和輪子)"],
+                correct: 2
+            },
+            {
+                id: 86,
+                category: "Simple Machines",
+                question: "What is the fulcrum of a lever?",
+                questionChinese: "什麼是槓桿的支點？",
+                options: ["The load being lifted (被舉起的負載)", "The force applied (施加的力)", "The pivot point (支點)", "The length of the lever (槓桿的長度)"],
+                correct: 2
+            },
+            {
+                id: 87,
+                category: "Simple Machines",
+                question: "Which simple machine is used to raise a flag on a flagpole?",
+                questionChinese: "哪種簡單機械用於升旗？",
+                options: ["Lever (槓桿)", "Inclined plane (斜面)", "Pulley (滑輪)", "Screw (螺絲)"],
+                correct: 2
+            },
+            {
+                id: 88,
+                category: "Simple Machines",
+                question: "What is the mechanical advantage of a simple machine?",
+                questionChinese: "簡單機械的機械利益是什麼？",
+                options: ["How fast it works (運作速度)", "How much it multiplies force (放大力的程度)", "Its weight (重量)", "Its cost (成本)"],
+                correct: 1
+            },
+            {
+                id: 89,
+                category: "Simple Machines",
+                question: "What simple machine is a doorknob?",
+                questionChinese: "門把手是什麼簡單機械？",
+                options: ["Lever (槓桿)", "Wheel and axle (輪軸)", "Pulley (滑輪)", "Inclined plane (斜面)"],
+                correct: 1
+            },
+            {
+                id: 90,
+                category: "Simple Machines",
+                question: "What is a wedge used for?",
+                questionChinese: "楔子用於什麼？",
+                options: ["Lifting heavy objects (舉起重物)", "Splitting or cutting objects (劈開或切割物體)", "Moving objects up (向上移動物體)", "Changing direction of force (改變力的方向)"],
+                correct: 1
+            },
+            {
+                id: 91,
+                category: "Simple Machines",
+                question: "What happens to the effort needed when you make an inclined plane longer?",
+                questionChinese: "當斜面變長時，所需的力會怎樣？",
+                options: ["Increases (增加)", "Decreases (減少)", "Stays the same (不變)", "Becomes zero (變零)"],
+                correct: 1
+            },
+            {
+                id: 92,
+                category: "Simple Machines",
+                question: "What simple machine is a knife?",
+                questionChinese: "刀是什麼簡單機械？",
+                options: ["Lever (槓桿)", "Wedge (楔子)", "Screw (螺絲)", "Wheel (輪子)"],
+                correct: 1
+            },
+            {
+                id: 93,
+                category: "Simple Machines",
+                question: "How many classes of levers are there?",
+                questionChinese: "槓桿有幾類？",
+                options: ["Two (二)", "Three (三)", "Four (四)", "Five (五)"],
+                correct: 1
+            },
+            {
+                id: 94,
+                category: "Simple Machines",
+                question: "What simple machine is a ramp?",
+                questionChinese: "斜坡是什麼簡單機械？",
+                options: ["Lever (槓桿)", "Pulley (滑輪)", "Inclined plane (斜面)", "Wedge (楔子)"],
+                correct: 2
+            },
+            {
+                id: 95,
+                category: "Simple Machines",
+                question: "What is a wheelbarrow an example of?",
+                questionChinese: "手推車是什麼的例子？",
+                options: ["First class lever (第一類槓桿)", "Second class lever (第二類槓桿)", "Third class lever (第三類槓桿)", "Inclined plane (斜面)"],
+                correct: 1
+            },
+            {
+                id: 96,
+                category: "Simple Machines",
+                question: "What does a fixed pulley change?",
+                questionChinese: "定滑輪改變什麼？",
+                options: ["The amount of force needed (所需力的大小)", "The direction of the force (力的方向)", "The distance moved (移動的距離)", "The weight of the object (物體的重量)"],
+                correct: 1
+            },
+            {
+                id: 97,
+                category: "Simple Machines",
+                question: "What simple machine is a jar lid?",
+                questionChinese: "罐子蓋子是什麼簡單機械？",
+                options: ["Lever (槓桿)", "Wedge (楔子)", "Screw (螺絲)", "Wheel and axle (輪軸)"],
+                correct: 3
+            },
+            {
+                id: 98,
+                category: "Simple Machines",
+                question: "What happens when you combine simple machines?",
+                questionChinese: "當你組合簡單機械時會怎樣？",
+                options: ["They become less efficient (效率降低)", "They can do more complex tasks (可以完成更複雜的任務)", "They stop working (停止運作)", "They lose mechanical advantage (失去機械利益)"],
+                correct: 1
+            },
+            {
+                id: 99,
+                category: "Simple Machines",
+                question: "What is an example of a compound machine?",
+                questionChinese: "什麼是複合機械的例子？",
+                options: ["A single ramp (單一斜坡)", "A lever alone (單獨的槓桿)", "A bicycle (自行車)", "A seesaw (蹺蹺板)"],
+                correct: 2
+            },
+            {
+                id: 100,
+                category: "Simple Machines",
+                question: "What principle explains why simple machines make work easier?",
+                questionChinese: "什麼原理解釋為什麼簡單機械使工作更容易？",
+                options: ["Work input equals work output (輸入功等於輸出功)", "Machines create energy (機器創造能量)", "Machines destroy energy (機器毀滅能量)", "Simple machines don't follow any rules (簡單機械不遵循任何規則)"],
+                correct: 0
+            }
+        ];
+
+        // User answers storage
+        let userAnswers = {};
+
+        // Initialize quiz
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${index + 1} of 100 | ${q.category}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="question-chinese">${q.questionChinese}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIndex) => `
+                            <div class="option" onclick="selectOption(${index}, ${optIndex})" data-q="${index}" data-opt="${optIndex}">
+                                ${String.fromCharCode(65 + optIndex)}. ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+            
+            updateProgress();
+        }
+
+        // Select option
+        function selectOption(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            
+            // Update UI
+            const options = document.querySelectorAll(`[data-q="${questionIndex}"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            
+            updateProgress();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            const progress = (answered / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Submit quiz
+        function submitQuiz() {
+            const answered = Object.keys(userAnswers).length;
+            if (answered < questions.length) {
+                const confirmSubmit = confirm(`You have answered ${answered} out of 100 questions. Are you sure you want to submit?`);
+                if (!confirmSubmit) return;
+            }
+            
+            // Calculate scores
+            let totalCorrect = 0;
+            let categoryScores = {
+                "Forces & Motion": { correct: 0, total: 0 },
+                "Energy": { correct: 0, total: 0 },
+                "Light & Sound": { correct: 0, total: 0 },
+                "Electricity & Magnetism": { correct: 0, total: 0 },
+                "Simple Machines": { correct: 0, total: 0 }
+            };
+            
+            questions.forEach((q, index) => {
+                const category = q.category;
+                categoryScores[category].total++;
+                
+                if (userAnswers[index] === q.correct) {
+                    totalCorrect++;
+                    categoryScores[category].correct++;
+                }
+                
+                // Show correct/incorrect
+                const options = document.querySelectorAll(`[data-q="${index}"]`);
+                options.forEach((opt, optIndex) => {
+                    opt.classList.remove('selected');
+                    if (optIndex === q.correct) {
+                        opt.classList.add('correct');
+                    } else if (optIndex === userAnswers[index] && optIndex !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                    opt.onclick = null;
+                    opt.style.cursor = 'default';
+                });
+            });
+            
+            // Show results
+            const percentage = Math.round((totalCorrect / questions.length) * 100);
+            document.getElementById('scoreCircle').textContent = percentage + '%';
+            document.getElementById('scoreText').textContent = `你答對了 ${totalCorrect}/100 題 | You answered ${totalCorrect}/100 correctly`;
+            
+            // Update category scores
+            document.getElementById('cat1Score').textContent = `${categoryScores["Forces & Motion"].correct}/20`;
+            document.getElementById('cat2Score').textContent = `${categoryScores["Energy"].correct}/20`;
+            document.getElementById('cat3Score').textContent = `${categoryScores["Light & Sound"].correct}/20`;
+            document.getElementById('cat4Score').textContent = `${categoryScores["Electricity & Magnetism"].correct}/20`;
+            document.getElementById('cat5Score').textContent = `${categoryScores["Simple Machines"].correct}/20`;
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Reset quiz
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('results').classList.remove('show');
+            initQuiz();
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize on load
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
