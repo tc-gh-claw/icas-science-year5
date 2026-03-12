@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICAS Mathematics Year 5 - 100 Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #fff;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .quiz-container {
+            padding: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .results {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .results p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .category-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .category-score {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .category-score h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .category-score p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧮 ICAS Mathematics Year 5</h1>
+            <p>Paper C | 100 Questions | 5 Categories</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <!-- Questions will be generated here -->
+        </div>
+
+        <div class="controls" id="controls">
+            <button class="btn btn-secondary" onclick="resetQuiz()">重置</button>
+            <button class="btn btn-primary" onclick="submitQuiz()">提交答案</button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="score-circle" id="scoreCircle">0</div>
+            <h2>測驗完成！</h2>
+            <p id="scoreText">你答對了 0/100 題</p>
+            
+            <div class="category-scores">
+                <div class="category-score">
+                    <h4>Number & Arithmetic</h4>
+                    <p id="cat1Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Algebra & Patterns</h4>
+                    <p id="cat2Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Measures & Units</h4>
+                    <p id="cat3Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Space & Geometry</h4>
+                    <p id="cat4Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Chance & Data</h4>
+                    <p id="cat5Score">0/20</p>
+                </div>
+            </div>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">🏠 主頁</a>
+                <a href="biology.html" class="nav-link">🧬 Biology</a>
+                <a href="chemistry.html" class="nav-link">⚗️ Chemistry</a>
+                <a href="physics.html" class="nav-link">🔬 Physics</a>
+                <a href="earth.html" class="nav-link">🌍 Earth Science</a>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top: 20px;">再試一次</button>
+        </div>
+    </div>
+
+    <script>
+        // Question bank - 100 questions organized by category
+        const questions = [
+            // Category 1: Number & Arithmetic (Questions 1-20)
+            {
+                id: 1,
+                category: "Number & Arithmetic",
+                question: "What is the value of the digit 7 in the number 47,856?",
+                options: ["7", "70", "700", "7,000"],
+                correct: 3
+            },
+            {
+                id: 2,
+                category: "Number & Arithmetic",
+                question: "Which of these numbers is the largest: 0.8, 0.75, 0.9, 0.87?",
+                options: ["0.8", "0.75", "0.9", "0.87"],
+                correct: 2
+            },
+            {
+                id: 3,
+                category: "Number & Arithmetic",
+                question: "What is 3/4 as a decimal?",
+                options: ["0.25", "0.5", "0.75", "0.8"],
+                correct: 2
+            },
+            {
+                id: 4,
+                category: "Number & Arithmetic",
+                question: "Calculate: 2,456 + 1,789 = ?",
+                options: ["4,135", "4,245", "4,345", "4,235"],
+                correct: 1
+            },
+            {
+                id: 5,
+                category: "Number & Arithmetic",
+                question: "What is 48 × 25?",
+                options: ["1,000", "1,100", "1,200", "1,500"],
+                correct: 2
+            },
+            {
+                id: 6,
+                category: "Number & Arithmetic",
+                question: "Which fraction is equivalent to 2/3?",
+                options: ["4/6", "3/6", "5/6", "1/3"],
+                correct: 0
+            },
+            {
+                id: 7,
+                category: "Number & Arithmetic",
+                question: "What is 1/4 + 1/4?",
+                options: ["1/8", "2/8", "1/2", "2/4"],
+                correct: 2
+            },
+            {
+                id: 8,
+                category: "Number & Arithmetic",
+                question: "Round 4,678 to the nearest hundred.",
+                options: ["4,600", "4,700", "4,680", "4,800"],
+                correct: 1
+            },
+            {
+                id: 9,
+                category: "Number & Arithmetic",
+                question: "What is the remainder when 47 is divided by 6?",
+                options: ["1", "3", "5", "7"],
+                correct: 2
+            },
+            {
+                id: 10,
+                category: "Number & Arithmetic",
+                question: "Calculate: 5,000 - 2,456 = ?",
+                options: ["2,544", "2,644", "2,444", "2,554"],
+                correct: 0
+            },
+            {
+                id: 11,
+                category: "Number & Arithmetic",
+                question: "What is 0.6 + 0.35?",
+                options: ["0.41", "0.95", "1.01", "0.90"],
+                correct: 1
+            },
+            {
+                id: 12,
+                category: "Number & Arithmetic",
+                question: "Which number is a multiple of both 3 and 5?",
+                options: ["10", "12", "15", "20"],
+                correct: 2
+            },
+            {
+                id: 13,
+                category: "Number & Arithmetic",
+                question: "What is 3/5 of 100?",
+                options: ["30", "50", "60", "80"],
+                correct: 2
+            },
+            {
+                id: 14,
+                category: "Number & Arithmetic",
+                question: "Place these numbers in order from smallest to largest: 1/4, 0.3, 2/5",
+                options: ["1/4, 0.3, 2/5", "0.3, 1/4, 2/5", "2/5, 0.3, 1/4", "1/4, 2/5, 0.3"],
+                correct: 0
+            },
+            {
+                id: 15,
+                category: "Number & Arithmetic",
+                question: "Calculate: 125 × 8 = ?",
+                options: ["800", "900", "1,000", "1,200"],
+                correct: 2
+            },
+            {
+                id: 16,
+                category: "Number & Arithmetic",
+                question: "What is the value of 4² + 3²?",
+                options: ["25", "49", "14", "7"],
+                correct: 0
+            },
+            {
+                id: 17,
+                category: "Number & Arithmetic",
+                question: "Simplify the fraction 12/18.",
+                options: ["1/3", "2/3", "3/4", "4/6"],
+                correct: 1
+            },
+            {
+                id: 18,
+                category: "Number & Arithmetic",
+                question: "What is 7.5 - 3.25?",
+                options: ["4.25", "4.35", "3.25", "3.75"],
+                correct: 0
+            },
+            {
+                id: 19,
+                category: "Number & Arithmetic",
+                question: "How many factors does 24 have?",
+                options: ["6", "7", "8", "9"],
+                correct: 2
+            },
+            {
+                id: 20,
+                category: "Number & Arithmetic",
+                question: "Calculate: 144 ÷ 12 = ?",
+                options: ["10", "11", "12", "13"],
+                correct: 2
+            },
+
+            // Category 2: Algebra & Patterns (Questions 21-40)
+            {
+                id: 21,
+                category: "Algebra & Patterns",
+                question: "What is the next number in the pattern: 3, 6, 9, 12, ...?",
+                options: ["13", "14", "15", "16"],
+                correct: 2
+            },
+            {
+                id: 22,
+                category: "Algebra & Patterns",
+                question: "Find the missing number: 15, 12, __, 6, 3",
+                options: ["10", "9", "8", "7"],
+                correct: 1
+            },
+            {
+                id: 23,
+                category: "Algebra & Patterns",
+                question: "If n = 7, what is the value of 3n + 4?",
+                options: ["21", "24", "25", "28"],
+                correct: 2
+            },
+            {
+                id: 24,
+                category: "Algebra & Patterns",
+                question: "What is the rule for this pattern: 2, 5, 8, 11, 14?",
+                options: ["Add 2", "Add 3", "Add 4", "Multiply by 2"],
+                correct: 1
+            },
+            {
+                id: 25,
+                category: "Algebra & Patterns",
+                question: "Solve: x + 8 = 17",
+                options: ["7", "8", "9", "10"],
+                correct: 2
+            },
+            {
+                id: 26,
+                category: "Algebra & Patterns",
+                question: "What is the 8th term in the sequence: 5, 10, 15, 20, ...?",
+                options: ["35", "40", "45", "50"],
+                correct: 1
+            },
+            {
+                id: 27,
+                category: "Algebra & Patterns",
+                question: "If a = 5 and b = 3, what is 2a + 3b?",
+                options: ["16", "18", "19", "21"],
+                correct: 2
+            },
+            {
+                id: 28,
+                category: "Algebra & Patterns",
+                question: "Find the missing number in: 2, 4, 8, 16, __, 64",
+                options: ["24", "30", "32", "36"],
+                correct: 2
+            },
+            {
+                id: 29,
+                category: "Algebra & Patterns",
+                question: "Solve: 3x = 27",
+                options: ["6", "7", "8", "9"],
+                correct: 3
+            },
+            {
+                id: 30,
+                category: "Algebra & Patterns",
+                question: "What comes next: △, △△, △△△, △△△△, ...?",
+                options: ["4 triangles", "5 triangles", "6 triangles", "8 triangles"],
+                correct: 1
+            },
+            {
+                id: 31,
+                category: "Algebra & Patterns",
+                question: "If □ + □ + □ = 27, what is the value of □?",
+                options: ["6", "7", "8", "9"],
+                correct: 3
+            },
+            {
+                id: 32,
+                category: "Algebra & Patterns",
+                question: "What is the rule for: 100, 90, 80, 70, 60?",
+                options: ["Subtract 5", "Subtract 10", "Divide by 10", "Multiply by 0.9"],
+                correct: 1
+            },
+            {
+                id: 33,
+                category: "Algebra & Patterns",
+                question: "Solve: y - 15 = 23",
+                options: ["37", "38", "39", "40"],
+                correct: 1
+            },
+            {
+                id: 34,
+                category: "Algebra & Patterns",
+                question: "Complete the pattern: 1, 4, 9, 16, 25, __",
+                options: ["30", "34", "36", "49"],
+                correct: 2
+            },
+            {
+                id: 35,
+                category: "Algebra & Patterns",
+                question: "If each box holds 6 apples, how many boxes are needed for 48 apples?",
+                options: ["6", "7", "8", "9"],
+                correct: 2
+            },
+            {
+                id: 36,
+                category: "Algebra & Patterns",
+                question: "What is the 10th even number?",
+                options: ["18", "20", "22", "24"],
+                correct: 1
+            },
+            {
+                id: 37,
+                category: "Algebra & Patterns",
+                question: "Find the missing operation: 12 __ 3 = 4",
+                options: ["+", "-", "×", "÷"],
+                correct: 3
+            },
+            {
+                id: 38,
+                category: "Algebra & Patterns",
+                question: "What is the next term: Z, W, T, Q, __?",
+                options: ["N", "M", "O", "P"],
+                correct: 0
+            },
+            {
+                id: 39,
+                category: "Algebra & Patterns",
+                question: "Solve: 2a + 5 = 21",
+                options: ["6", "7", "8", "9"],
+                correct: 2
+            },
+            {
+                id: 40,
+                category: "Algebra & Patterns",
+                question: "In the pattern ■○■○○■○○○■..., how many circles are in the 5th group?",
+                options: ["3", "4", "5", "6"],
+                correct: 1
+            },
+
+            // Category 3: Measures & Units (Questions 41-60)
+            {
+                id: 41,
+                category: "Measures & Units",
+                question: "How many millimeters are in 4.5 centimeters?",
+                options: ["45 mm", "450 mm", "4,500 mm", "0.45 mm"],
+                correct: 0
+            },
+            {
+                id: 42,
+                category: "Measures & Units",
+                question: "Convert 2.5 kilograms to grams.",
+                options: ["25 g", "250 g", "2,500 g", "25,000 g"],
+                correct: 2
+            },
+            {
+                id: 43,
+                category: "Measures & Units",
+                question: "How many minutes are in 2.5 hours?",
+                options: ["120 min", "140 min", "150 min", "160 min"],
+                correct: 2
+            },
+            {
+                id: 44,
+                category: "Measures & Units",
+                question: "What is the perimeter of a rectangle with length 8 cm and width 5 cm?",
+                options: ["13 cm", "26 cm", "40 cm", "16 cm"],
+                correct: 1
+            },
+            {
+                id: 45,
+                category: "Measures & Units",
+                question: "A bottle contains 1.5 liters. How many 250 ml glasses can be filled?",
+                options: ["4", "5", "6", "8"],
+                correct: 2
+            },
+            {
+                id: 46,
+                category: "Measures & Units",
+                question: "Convert 3 meters to centimeters.",
+                options: ["30 cm", "300 cm", "3,000 cm", "30,000 cm"],
+                correct: 1
+            },
+            {
+                id: 47,
+                category: "Measures & Units",
+                question: "If a movie starts at 2:30 PM and ends at 4:45 PM, how long is it?",
+                options: ["2 hours 15 min", "2 hours 25 min", "2 hours 30 min", "1 hour 45 min"],
+                correct: 0
+            },
+            {
+                id: 48,
+                category: "Measures & Units",
+                question: "What is the area of a square with side length 7 cm?",
+                options: ["14 cm²", "28 cm²", "42 cm²", "49 cm²"],
+                correct: 3
+            },
+            {
+                id: 49,
+                category: "Measures & Units",
+                question: "How many days are in 8 weeks?",
+                options: ["48", "54", "56", "60"],
+                correct: 2
+            },
+            {
+                id: 50,
+                category: "Measures & Units",
+                question: "Convert 5,000 meters to kilometers.",
+                options: ["0.5 km", "5 km", "50 km", "500 km"],
+                correct: 1
+            },
+            {
+                id: 51,
+                category: "Measures & Units",
+                question: "A jug contains 3.6 liters. If 1.8 liters are poured out, how much remains?",
+                options: ["1.6 L", "1.8 L", "2.0 L", "2.2 L"],
+                correct: 1
+            },
+            {
+                id: 52,
+                category: "Measures & Units",
+                question: "What is the volume of a cube with side 4 cm?",
+                options: ["12 cm³", "16 cm³", "64 cm³", "48 cm³"],
+                correct: 2
+            },
+            {
+                id: 53,
+                category: "Measures & Units",
+                question: "How many seconds are in 5 minutes?",
+                options: ["250 s", "300 s", "350 s", "500 s"],
+                correct: 1
+            },
+            {
+                id: 54,
+                category: "Measures & Units",
+                question: "A rectangular field is 120 m long and 80 m wide. What is its perimeter?",
+                options: ["200 m", "400 m", "9,600 m", "960 m"],
+                correct: 1
+            },
+            {
+                id: 55,
+                category: "Measures & Units",
+                question: "Convert 750 grams to kilograms.",
+                options: ["0.075 kg", "0.75 kg", "7.5 kg", "75 kg"],
+                correct: 1
+            },
+            {
+                id: 56,
+                category: "Measures & Units",
+                question: "If a train travels 240 km in 3 hours, what is its average speed?",
+                options: ["60 km/h", "70 km/h", "80 km/h", "90 km/h"],
+                correct: 2
+            },
+            {
+                id: 57,
+                category: "Measures & Units",
+                question: "What time is 45 minutes after 10:20 AM?",
+                options: ["10:55 AM", "11:05 AM", "11:15 AM", "10:65 AM"],
+                correct: 1
+            },
+            {
+                id: 58,
+                category: "Measures & Units",
+                question: "How many milliliters are in 2.25 liters?",
+                options: ["225 ml", "2,250 ml", "22,500 ml", "225,000 ml"],
+                correct: 1
+            },
+            {
+                id: 59,
+                category: "Measures & Units",
+                question: "A swimming pool is 25 m long, 10 m wide, and 2 m deep. What is its volume?",
+                options: ["250 m³", "500 m³", "370 m³", "370 L"],
+                correct: 1
+            },
+            {
+                id: 60,
+                category: "Measures & Units",
+                question: "Convert 180 minutes to hours.",
+                options: ["1.8 hours", "2 hours", "3 hours", "3.5 hours"],
+                correct: 2
+            },
+
+            // Category 4: Space & Geometry (Questions 61-80)
+            {
+                id: 61,
+                category: "Space & Geometry",
+                question: "How many sides does a hexagon have?",
+                options: ["5", "6", "7", "8"],
+                correct: 1
+            },
+            {
+                id: 62,
+                category: "Space & Geometry",
+                question: "What type of angle is 95 degrees?",
+                options: ["Acute", "Right", "Obtuse", "Straight"],
+                correct: 2
+            },
+            {
+                id: 63,
+                category: "Space & Geometry",
+                question: "How many lines of symmetry does a square have?",
+                options: ["2", "4", "6", "8"],
+                correct: 1
+            },
+            {
+                id: 64,
+                category: "Space & Geometry",
+                question: "What is the sum of angles in a triangle?",
+                options: ["90°", "180°", "270°", "360°"],
+                correct: 1
+            },
+            {
+                id: 65,
+                category: "Space & Geometry",
+                question: "Which 3D shape has 6 square faces?",
+                options: ["Sphere", "Cylinder", "Cube", "Cone"],
+                correct: 2
+            },
+            {
+                id: 66,
+                category: "Space & Geometry",
+                question: "How many vertices does a cube have?",
+                options: ["6", "8", "12", "24"],
+                correct: 1
+            },
+            {
+                id: 67,
+                category: "Space & Geometry",
+                question: "What is the name of a polygon with 5 sides?",
+                options: ["Quadrilateral", "Pentagon", "Hexagon", "Octagon"],
+                correct: 1
+            },
+            {
+                id: 68,
+                category: "Space & Geometry",
+                question: "An angle measuring exactly 90° is called:",
+                options: ["Acute", "Obtuse", "Right", "Reflex"],
+                correct: 2
+            },
+            {
+                id: 69,
+                category: "Space & Geometry",
+                question: "Which shape has no lines of symmetry?",
+                options: ["Circle", "Equilateral triangle", "Scalene triangle", "Rectangle"],
+                correct: 2
+            },
+            {
+                id: 70,
+                category: "Space & Geometry",
+                question: "How many edges does a triangular prism have?",
+                options: ["6", "8", "9", "12"],
+                correct: 2
+            },
+            {
+                id: 71,
+                category: "Space & Geometry",
+                question: "What is the name of an angle less than 90°?",
+                options: ["Acute", "Right", "Obtuse", "Straight"],
+                correct: 0
+            },
+            {
+                id: 72,
+                category: "Space & Geometry",
+                question: "A parallelogram with four equal sides is called:",
+                options: ["Rectangle", "Rhombus", "Trapezium", "Kite"],
+                correct: 1
+            },
+            {
+                id: 73,
+                category: "Space & Geometry",
+                question: "How many faces does a cylinder have?",
+                options: ["2", "3", "4", "5"],
+                correct: 1
+            },
+            {
+                id: 74,
+                category: "Space & Geometry",
+                question: "Which transformation creates a mirror image?",
+                options: ["Translation", "Rotation", "Reflection", "Enlargement"],
+                correct: 2
+            },
+            {
+                id: 75,
+                category: "Space & Geometry",
+                question: "What is the compass direction opposite to North?",
+                options: ["East", "South", "West", "Northeast"],
+                correct: 1
+            },
+            {
+                id: 76,
+                category: "Space & Geometry",
+                question: "How many degrees does the minute hand turn in 15 minutes?",
+                options: ["45°", "60°", "90°", "180°"],
+                correct: 2
+            },
+            {
+                id: 77,
+                category: "Space & Geometry",
+                question: "A shape that tessellates can:",
+                options: ["Spin", "Flip", "Fit together without gaps", "Float"],
+                correct: 2
+            },
+            {
+                id: 78,
+                category: "Space & Geometry",
+                question: "What is the name of a 3D shape with a circular base and one vertex?",
+                options: ["Cylinder", "Sphere", "Cone", "Pyramid"],
+                correct: 2
+            },
+            {
+                id: 79,
+                category: "Space & Geometry",
+                question: "If you turn 90° clockwise from facing North, which direction do you face?",
+                options: ["South", "West", "East", "Northeast"],
+                correct: 2
+            },
+            {
+                id: 80,
+                category: "Space & Geometry",
+                question: "How many degrees is a complete rotation?",
+                options: ["90°", "180°", "270°", "360°"],
+                correct: 3
+            },
+
+            // Category 5: Chance & Data (Questions 81-100)
+            {
+                id: 81,
+                category: "Chance & Data",
+                question: "What is the probability of rolling a 4 on a standard die?",
+                options: ["1/3", "1/4", "1/5", "1/6"],
+                correct: 3
+            },
+            {
+                id: 82,
+                category: "Chance & Data",
+                question: "What is the mode of: 3, 5, 7, 5, 9, 5, 2?",
+                options: ["2", "3", "5", "7"],
+                correct: 2
+            },
+            {
+                id: 83,
+                category: "Chance & Data",
+                question: "Find the mean of: 12, 18, 15, 21, 14",
+                options: ["14", "15", "16", "17"],
+                correct: 2
+            },
+            {
+                id: 84,
+                category: "Chance & Data",
+                question: "What is the probability of getting heads when flipping a coin?",
+                options: ["1/4", "1/3", "1/2", "2/3"],
+                correct: 2
+            },
+            {
+                id: 85,
+                category: "Chance & Data",
+                question: "In a bag with 3 red, 2 blue, and 5 green marbles, what is P(green)?",
+                options: ["1/5", "2/5", "1/2", "3/5"],
+                correct: 2
+            },
+            {
+                id: 86,
+                category: "Chance & Data",
+                question: "Find the median of: 8, 3, 12, 5, 9",
+                options: ["5", "8", "9", "12"],
+                correct: 1
+            },
+            {
+                id: 87,
+                category: "Chance & Data",
+                question: "What is the range of: 25, 18, 32, 15, 28?",
+                options: ["10", "15", "17", "20"],
+                correct: 2
+            },
+            {
+                id: 88,
+                category: "Chance & Data",
+                question: "If the probability of rain is 0.3, what is the probability of no rain?",
+                options: ["0.3", "0.5", "0.7", "1.0"],
+                correct: 2
+            },
+            {
+                id: 89,
+                category: "Chance & Data",
+                question: "How many students chose Apple if 25% of 40 students chose it?",
+                options: ["8", "10", "12", "15"],
+                correct: 1
+            },
+            {
+                id: 90,
+                category: "Chance & Data",
+                question: "What type of graph is best for showing change over time?",
+                options: ["Bar graph", "Pie chart", "Line graph", "Pictograph"],
+                correct: 2
+            },
+            {
+                id: 91,
+                category: "Chance & Data",
+                question: "Find the mean of: 5, 8, 6, 9, 7",
+                options: ["6", "7", "8", "9"],
+                correct: 1
+            },
+            {
+                id: 92,
+                category: "Chance & Data",
+                question: "In a class of 30 students, 18 are girls. What fraction are boys?",
+                options: ["1/5", "2/5", "3/5", "4/5"],
+                correct: 1
+            },
+            {
+                id: 93,
+                category: "Chance & Data",
+                question: "What is the probability of rolling an even number on a die?",
+                options: ["1/6", "1/3", "1/2", "2/3"],
+                correct: 2
+            },
+            {
+                id: 94,
+                category: "Chance & Data",
+                question: "Find the mode of: 12, 15, 18, 12, 19, 12, 20",
+                options: ["15", "18", "12", "19"],
+                correct: 2
+            },
+            {
+                id: 95,
+                category: "Chance & Data",
+                question: "If a spinner has 8 equal sections numbered 1-8, what is P(number > 6)?",
+                options: ["1/8", "1/4", "3/8", "1/2"],
+                correct: 1
+            },
+            {
+                id: 96,
+                category: "Chance & Data",
+                question: "What is the median of: 14, 22, 18, 25, 16, 20?",
+                options: ["18", "19", "20", "21"],
+                correct: 1
+            },
+            {
+                id: 97,
+                category: "Chance & Data",
+                question: "A pie chart shows 25% for red. What angle represents red?",
+                options: ["45°", "60°", "90°", "120°"],
+                correct: 2
+            },
+            {
+                id: 98,
+                category: "Chance & Data",
+                question: "The temperature was recorded as: 20°, 22°, 25°, 23°, 20°. What is the mode?",
+                options: ["20°", "22°", "23°", "25°"],
+                correct: 0
+            },
+            {
+                id: 99,
+                category: "Chance & Data",
+                question: "What is the probability of drawing a heart from a standard deck of cards?",
+                options: ["1/4", "1/3", "1/2", "1/13"],
+                correct: 0
+            },
+            {
+                id: 100,
+                category: "Chance & Data",
+                question: "Find the range of: 45, 38, 52, 41, 49",
+                options: ["10", "12", "14", "16"],
+                correct: 2
+            }
+        ];
+
+        // User answers storage
+        let userAnswers = {};
+
+        // Initialize quiz
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${index + 1} of 100 | ${q.category}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIndex) => `
+                            <div class="option" onclick="selectOption(${index}, ${optIndex})" data-q="${index}" data-opt="${optIndex}">
+                                ${String.fromCharCode(65 + optIndex)}. ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+            
+            updateProgress();
+        }
+
+        // Select option
+        function selectOption(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            
+            // Update UI
+            const options = document.querySelectorAll(`[data-q="${questionIndex}"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            
+            updateProgress();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            const progress = (answered / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Submit quiz
+        function submitQuiz() {
+            const answered = Object.keys(userAnswers).length;
+            if (answered < questions.length) {
+                const confirmSubmit = confirm(`You have answered ${answered} out of 100 questions. Are you sure you want to submit?`);
+                if (!confirmSubmit) return;
+            }
+            
+            // Calculate scores
+            let totalCorrect = 0;
+            let categoryScores = {
+                "Number & Arithmetic": { correct: 0, total: 0 },
+                "Algebra & Patterns": { correct: 0, total: 0 },
+                "Measures & Units": { correct: 0, total: 0 },
+                "Space & Geometry": { correct: 0, total: 0 },
+                "Chance & Data": { correct: 0, total: 0 }
+            };
+            
+            questions.forEach((q, index) => {
+                const category = q.category;
+                categoryScores[category].total++;
+                
+                if (userAnswers[index] === q.correct) {
+                    totalCorrect++;
+                    categoryScores[category].correct++;
+                }
+                
+                // Show correct/incorrect
+                const options = document.querySelectorAll(`[data-q="${index}"]`);
+                options.forEach((opt, optIndex) => {
+                    opt.classList.remove('selected');
+                    if (optIndex === q.correct) {
+                        opt.classList.add('correct');
+                    } else if (optIndex === userAnswers[index] && optIndex !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                    opt.onclick = null;
+                    opt.style.cursor = 'default';
+                });
+            });
+            
+            // Show results
+            const percentage = Math.round((totalCorrect / questions.length) * 100);
+            document.getElementById('scoreCircle').textContent = percentage + '%';
+            document.getElementById('scoreText').textContent = `You answered ${totalCorrect}/100 questions correctly`;
+            
+            // Update category scores
+            document.getElementById('cat1Score').textContent = `${categoryScores["Number & Arithmetic"].correct}/20`;
+            document.getElementById('cat2Score').textContent = `${categoryScores["Algebra & Patterns"].correct}/20`;
+            document.getElementById('cat3Score').textContent = `${categoryScores["Measures & Units"].correct}/20`;
+            document.getElementById('cat4Score').textContent = `${categoryScores["Space & Geometry"].correct}/20`;
+            document.getElementById('cat5Score').textContent = `${categoryScores["Chance & Data"].correct}/20`;
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Reset quiz
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('results').classList.remove('show');
+            initQuiz();
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize on load
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
