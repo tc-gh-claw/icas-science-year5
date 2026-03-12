@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICAS Biology Year 5 - 100 Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #fff;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .quiz-container {
+            padding: 30px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #11998e;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #11998e;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .question-text {
+            font-size: 17px;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .question-text small {
+            display: block;
+            color: #666;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+        }
+
+        .option:hover {
+            border-color: #11998e;
+            background: #f0fff4;
+        }
+
+        .option.selected {
+            border-color: #11998e;
+            background: #11998e;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .results {
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .results p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .category-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .category-score {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #11998e;
+        }
+
+        .category-score h4 {
+            color: #11998e;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .category-score p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #11998e;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: #11998e;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧬 ICAS Biology Year 5</h1>
+            <p>Paper C | 100 Questions | 5 Categories</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="quiz-container" id="quizContainer">
+            <!-- Questions will be generated here -->
+        </div>
+
+        <div class="controls" id="controls">
+            <button class="btn btn-secondary" onclick="resetQuiz()">重置</button>
+            <button class="btn btn-primary" onclick="submitQuiz()">提交答案</button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="score-circle" id="scoreCircle">0</div>
+            <h2>測驗完成！</h2>
+            <p id="scoreText">你答對了 0/100 題</p>
+            
+            <div class="category-scores">
+                <div class="category-score">
+                    <h4>Living Things & Classification</h4>
+                    <p id="cat1Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Human Body Systems</h4>
+                    <p id="cat2Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Plants & Photosynthesis</h4>
+                    <p id="cat3Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Ecosystems & Food Chains</h4>
+                    <p id="cat4Score">0/20</p>
+                </div>
+                <div class="category-score">
+                    <h4>Life Cycles & Adaptations</h4>
+                    <p id="cat5Score">0/20</p>
+                </div>
+            </div>
+
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">🏠 主頁</a>
+                <a href="math.html" class="nav-link">🧮 Mathematics</a>
+                <a href="chemistry.html" class="nav-link">⚗️ Chemistry</a>
+                <a href="physics.html" class="nav-link">🔬 Physics</a>
+                <a href="earth.html" class="nav-link">🌍 Earth Science</a>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetQuiz()" style="margin-top: 20px;">再試一次</button>
+        </div>
+    </div>
+
+    <script>
+        // Question bank - 100 questions organized by category
+        const questions = [
+            // Category 1: Living Things & Classification (Questions 1-20)
+            {
+                id: 1,
+                category: "Living Things & Classification",
+                question: "Which is a characteristic of all living things?<br><small>(所有生物的特徵是？)</small>",
+                options: ["Can fly (會飛)", "Can reproduce (能繁殖)", "Have legs (有腿)", "Are green (是綠色的)"],
+                correct: 1
+            },
+            {
+                id: 2,
+                category: "Living Things & Classification",
+                question: "What do plants need for photosynthesis?<br><small>(植物光合作用需要什麼？)</small>",
+                options: ["Oxygen and water only", "Soil and rocks only", "Sunlight, water and CO2", "Sugar and salt"],
+                correct: 2
+            },
+            {
+                id: 3,
+                category: "Living Things & Classification",
+                question: "What are organisms that make their own food called?<br><small>(能自己製造食物的生物稱為？)</small>",
+                options: ["Consumers (消費者)", "Decomposers (分解者)", "Predators (捕食者)", "Producers (生產者)"],
+                correct: 3
+            },
+            {
+                id: 4,
+                category: "Living Things & Classification",
+                question: "Which gas do plants release during photosynthesis?<br><small>(植物光合作用釋放什麼氣體？)</small>",
+                options: ["Carbon dioxide (二氧化碳)", "Nitrogen (氮氣)", "Methane (甲烷)", "Oxygen (氧氣)"],
+                correct: 3
+            },
+            {
+                id: 5,
+                category: "Living Things & Classification",
+                question: "What is the role of decomposers?<br><small>(分解者的作用是？)</small>",
+                options: ["Break down dead organisms (分解死去的生物)", "Eat living plants (吃活的植物)", "Produce oxygen (產生氧氣)", "Hunt other animals (捕獵)"],
+                correct: 0
+            },
+            {
+                id: 6,
+                category: "Living Things & Classification",
+                question: "Which is a herbivore?<br><small>(哪個是草食性動物？)</small>",
+                options: ["Lion (獅子)", "Tiger (老虎)", "Eagle (鷹)", "Rabbit (兔子)"],
+                correct: 3
+            },
+            {
+                id: 7,
+                category: "Living Things & Classification",
+                question: "What are animals that eat both plants and meat called?<br><small>(既吃植物又吃肉的動物稱為？)</small>",
+                options: ["Herbivores (草食性)", "Omnivores (雜食性)", "Carnivores (肉食性)", "Producers (生產者)"],
+                correct: 1
+            },
+            {
+                id: 8,
+                category: "Living Things & Classification",
+                question: "Which of these is a mammal?<br><small>(哪個是哺乳動物？)</small>",
+                options: ["Snake (蛇)", "Frog (青蛙)", "Whale (鯨魚)", "Eagle (鷹)"],
+                correct: 2
+            },
+            {
+                id: 9,
+                category: "Living Things & Classification",
+                question: "Which animal lays eggs?<br><small>(哪種動物會產卵？)</small>",
+                options: ["Cat (貓)", "Dog (狗)", "Duck (鴨子)", "Monkey (猴子)"],
+                correct: 2
+            },
+            {
+                id: 10,
+                category: "Living Things & Classification",
+                question: "What is an ecosystem?<br><small>(什麼是生態系統？)</small>",
+                options: ["A community of living and non-living things (生物和非生物的群落)", "Only animals in an area (只有動物)", "Only plants in a garden (只有植物)", "A type of animal (一種動物)"],
+                correct: 0
+            },
+            {
+                id: 11,
+                category: "Living Things & Classification",
+                question: "Which gas do humans breathe in for survival?<br><small>(人類吸入什麼氣體生存？)</small>",
+                options: ["Oxygen (氧氣)", "Carbon dioxide (二氧化碳)", "Nitrogen (氮氣)", "Hydrogen (氫氣)"],
+                correct: 0
+            },
+            {
+                id: 12,
+                category: "Living Things & Classification",
+                question: "Which organism is at the top of a food chain?<br><small>(哪種生物位於食物鏈頂端？)</small>",
+                options: ["Grass (草)", "Rabbit (兔子)", "Fox (狐狸)", "Lion (獅子)"],
+                correct: 3
+            },
+            {
+                id: 13,
+                category: "Living Things & Classification",
+                question: "What do all animals need to survive?<br><small>(所有動物需要什麼才能生存？)</small>",
+                options: ["Sunlight only", "Food, water and air", "Television", "Toys"],
+                correct: 1
+            },
+            {
+                id: 14,
+                category: "Living Things & Classification",
+                question: "Which group do frogs belong to?<br><small>(青蛙屬於哪一類動物？)</small>",
+                options: ["Reptiles (爬蟲類)", "Amphibians (兩棲類)", "Mammals (哺乳類)", "Birds (鳥類)"],
+                correct: 1
+            },
+            {
+                id: 15,
+                category: "Living Things & Classification",
+                question: "What characteristic do fish use to breathe?<br><small>(魚類用什麼呼吸？)</small>",
+                options: ["Lungs (肺)", "Gills (鰓)", "Skin (皮膚)", "Nose (鼻子)"],
+                correct: 1
+            },
+            {
+                id: 16,
+                category: "Living Things & Classification",
+                question: "Which of these is NOT a living thing?<br><small>(哪個不是生物？)</small>",
+                options: ["Tree (樹)", "Rock (岩石)", "Bacteria (細菌)", "Bird (鳥)"],
+                correct: 1
+            },
+            {
+                id: 17,
+                category: "Living Things & Classification",
+                question: "What do carnivores eat?<br><small>(肉食性動物吃什麼？)</small>",
+                options: ["Only plants", "Only meat", "Both plants and meat", "Only fruits"],
+                correct: 1
+            },
+            {
+                id: 18,
+                category: "Living Things & Classification",
+                question: "Which animal is a reptile?<br><small>(哪種動物是爬蟲類？)</small>",
+                options: ["Frog (青蛙)", "Lizard (蜥蜴)", "Whale (鯨魚)", "Bat (蝙蝠)"],
+                correct: 1
+            },
+            {
+                id: 19,
+                category: "Living Things & Classification",
+                question: "What is the main difference between plants and animals?<br><small>(植物和動物的主要區別是？)</small>",
+                options: ["Plants can make their own food", "Animals are bigger", "Plants can walk", "Animals don't need water"],
+                correct: 0
+            },
+            {
+                id: 20,
+                category: "Living Things & Classification",
+                question: "Which of these animals is an invertebrate?<br><small>(哪種動物是無脊椎動物？)</small>",
+                options: ["Dog (狗)", "Spider (蜘蛛)", "Snake (蛇)", "Fish (魚)"],
+                correct: 1
+            },
+
+            // Category 2: Human Body Systems (Questions 21-40)
+            {
+                id: 21,
+                category: "Human Body Systems",
+                question: "Which system pumps blood around the body?<br><small>(哪個系統負責泵血到全身？)</small>",
+                options: ["Circulatory system (循環系統)", "Digestive system (消化系統)", "Respiratory system (呼吸系統)", "Nervous system (神經系統)"],
+                correct: 0
+            },
+            {
+                id: 22,
+                category: "Human Body Systems",
+                question: "What is the function of the nervous system?<br><small>(神經系統的功能是？)</small>",
+                options: ["Send messages around the body (發送訊息)", "Digest food (消化食物)", "Pump blood (泵血)", "Breathe air (呼吸)"],
+                correct: 0
+            },
+            {
+                id: 23,
+                category: "Human Body Systems",
+                question: "What is the main function of the respiratory system?<br><small>(呼吸系統的主要功能是？)</small>",
+                options: ["Digest food (消化食物)", "Exchange gases (氣體交換)", "Pump blood (泵血)", "Move the body (移動身體)"],
+                correct: 1
+            },
+            {
+                id: 24,
+                category: "Human Body Systems",
+                question: "What happens to food in the digestive system?<br><small>(食物在消化系統中會？)</small>",
+                options: ["Turned into oxygen (變成氧氣)", "Broken down into nutrients (分解成養分)", "Becomes blood (變成血液)", "Stored as fat only (只儲存為脂肪)"],
+                correct: 1
+            },
+            {
+                id: 25,
+                category: "Human Body Systems",
+                question: "What is the largest organ in the human body?<br><small>(人體最大的器官是？)</small>",
+                options: ["Liver (肝臟)", "Skin (皮膚)", "Heart (心臟)", "Brain (大腦)"],
+                correct: 1
+            },
+            {
+                id: 26,
+                category: "Human Body Systems",
+                question: "What is the function of white blood cells?<br><small>(白血球的功能是？)</small>",
+                options: ["Fight infections (對抗感染)", "Carry oxygen (攜帶氧氣)", "Clot blood (凝血)", "Transport nutrients (輸送養分)"],
+                correct: 0
+            },
+            {
+                id: 27,
+                category: "Human Body Systems",
+                question: "What is the function of red blood cells?<br><small>(紅血球的功能是？)</small>",
+                options: ["Fight germs (對抗病菌)", "Carry oxygen (攜帶氧氣)", "Digest food (消化食物)", "Send signals (發送信號)"],
+                correct: 1
+            },
+            {
+                id: 28,
+                category: "Human Body Systems",
+                question: "Which organ helps control body temperature?<br><small>(哪個器官幫助調節體溫？)</small>",
+                options: ["Heart (心臟)", "Liver (肝臟)", "Kidney (腎臟)", "Skin (皮膚)"],
+                correct: 3
+            },
+            {
+                id: 29,
+                category: "Human Body Systems",
+                question: "Which is NOT a sense organ?<br><small>(哪個不是感覺器官？)</small>",
+                options: ["Eyes (眼睛)", "Ears (耳朵)", "Skin (皮膚)", "Heart (心臟)"],
+                correct: 3
+            },
+            {
+                id: 30,
+                category: "Human Body Systems",
+                question: "Which vitamin is produced when skin is exposed to sunlight?<br><small>(皮膚受陽光照射產生哪種維生素？)</small>",
+                options: ["Vitamin A (維生素A)", "Vitamin B (維生素B)", "Vitamin C (維生素C)", "Vitamin D (維生素D)"],
+                correct: 3
+            },
+            {
+                id: 31,
+                category: "Human Body Systems",
+                question: "Where does digestion begin?<br><small>(消化從哪裡開始？)</small>",
+                options: ["Mouth (口腔)", "Stomach (胃)", "Small intestine (小腸)", "Esophagus (食道)"],
+                correct: 0
+            },
+            {
+                id: 32,
+                category: "Human Body Systems",
+                question: "What organ stores urine before it leaves the body?<br><small>(哪個器官儲存尿液？)</small>",
+                options: ["Kidney (腎臟)", "Bladder (膀胱)", "Liver (肝臟)", "Stomach (胃)"],
+                correct: 1
+            },
+            {
+                id: 33,
+                category: "Human Body Systems",
+                question: "Which part of the brain controls balance?<br><small>(大腦哪個部分控制平衡？)</small>",
+                options: ["Cerebrum (大腦)", "Cerebellum (小腦)", "Brain stem (腦幹)", "Spinal cord (脊髓)"],
+                correct: 1
+            },
+            {
+                id: 34,
+                category: "Human Body Systems",
+                question: "What do bones produce?<br><small>(骨頭產生什麼？)</small>",
+                options: ["Milk", "Blood cells (血細胞)", "Hormones (荷爾蒙)", "Enzymes (酶)"],
+                correct: 1
+            },
+            {
+                id: 35,
+                category: "Human Body Systems",
+                question: "Which muscle helps us breathe?<br><small>(哪塊肌肉幫助我們呼吸？)</small>",
+                options: ["Biceps (二頭肌)", "Diaphragm (橫膈膜)", "Heart (心臟)", "Stomach (胃)"],
+                correct: 1
+            },
+            {
+                id: 36,
+                category: "Human Body Systems",
+                question: "What protects the lungs and heart?<br><small>(什麼保護肺和心臟？)</small>",
+                options: ["Skull (頭骨)", "Rib cage (肋骨)", "Spine (脊柱)", "Pelvis (骨盆)"],
+                correct: 1
+            },
+            {
+                id: 37,
+                category: "Human Body Systems",
+                question: "What filters waste from blood?<br><small>(什麼從血液中過濾廢物？)</small>",
+                options: ["Heart (心臟)", "Liver (肝臟)", "Kidneys (腎臟)", "Lungs (肺)"],
+                correct: 2
+            },
+            {
+                id: 38,
+                category: "Human Body Systems",
+                question: "Which system helps fight diseases?<br><small>(哪個系統幫助對抗疾病？)</small>",
+                options: ["Immune system (免疫系統)", "Digestive system (消化系統)", "Nervous system (神經系統)", "Skeletal system (骨骼系統)"],
+                correct: 0
+            },
+            {
+                id: 39,
+                category: "Human Body Systems",
+                question: "What carries messages from the brain to the body?<br><small>(什麼將訊息從大腦傳到身體？)</small>",
+                options: ["Bones (骨頭)", "Blood (血液)", "Nerves (神經)", "Muscles (肌肉)"],
+                correct: 2
+            },
+            {
+                id: 40,
+                category: "Human Body Systems",
+                question: "Where does most nutrient absorption occur?<br><small>(大部分養分在哪裡被吸收？)</small>",
+                options: ["Stomach (胃)", "Large intestine (大腸)", "Small intestine (小腸)", "Esophagus (食道)"],
+                correct: 2
+            },
+
+            // Category 3: Plants & Photosynthesis (Questions 41-60)
+            {
+                id: 41,
+                category: "Plants & Photosynthesis",
+                question: "What is the main function of roots?<br><small>(根部的主要功能是？)</small>",
+                options: ["To make food (製造食物)", "To absorb water and nutrients (吸收水分和養分)", "To produce oxygen (產生氧氣)", "To attract insects (吸引昆蟲)"],
+                correct: 1
+            },
+            {
+                id: 42,
+                category: "Plants & Photosynthesis",
+                question: "Which part contains chlorophyll?<br><small>(哪個部分含有葉綠素？)</small>",
+                options: ["Roots (根)", "Stem (莖)", "Leaves (葉子)", "Flowers (花朵)"],
+                correct: 2
+            },
+            {
+                id: 43,
+                category: "Plants & Photosynthesis",
+                question: "Which part of the flower produces pollen?<br><small>(花的哪個部分產生花粉？)</small>",
+                options: ["Petal (花瓣)", "Stigma (柱頭)", "Anther (花藥)", "Ovary (子房)"],
+                correct: 2
+            },
+            {
+                id: 44,
+                category: "Plants & Photosynthesis",
+                question: "Which part of a plant attracts pollinators?<br><small>(植物的哪個部分吸引傳粉者？)</small>",
+                options: ["Roots (根)", "Stem (莖)", "Flowers (花朵)", "Leaves (葉子)"],
+                correct: 2
+            },
+            {
+                id: 45,
+                category: "Plants & Photosynthesis",
+                question: "What is the process when a seed begins to grow?<br><small>(種子開始生長的過程叫？)</small>",
+                options: ["Germination (發芽)", "Photosynthesis (光合作用)", "Metamorphosis (變態)", "Fertilization (受精)"],
+                correct: 0
+            },
+            {
+                id: 46,
+                category: "Plants & Photosynthesis",
+                question: "What do plants need from soil?<br><small>(植物從土壤中需要什麼？)</small>",
+                options: ["Oxygen", "Water and minerals", "Carbon dioxide", "Light"],
+                correct: 1
+            },
+            {
+                id: 47,
+                category: "Plants & Photosynthesis",
+                question: "What carries water up a plant stem?<br><small>(什麼將水輸送到植物莖部？)</small>",
+                options: ["Phloem (韌皮部)", "Xylem (木質部)", "Roots (根)", "Leaves (葉)"],
+                correct: 1
+            },
+            {
+                id: 48,
+                category: "Plants & Photosynthesis",
+                question: "What is the green pigment in plants called?<br><small>(植物中的綠色色素叫什麼？)</small>",
+                options: ["Melanin (黑色素)", "Chlorophyll (葉綠素)", "Carotene (胡蘿蔔素)", "Hemoglobin (血紅素)"],
+                correct: 1
+            },
+            {
+                id: 49,
+                category: "Plants & Photosynthesis",
+                question: "Where does photosynthesis mainly occur?<br><small>(光合作用主要在哪裡進行？)</small>",
+                options: ["Roots (根)", "Stem (莖)", "Leaves (葉)", "Flowers (花)"],
+                correct: 2
+            },
+            {
+                id: 50,
+                category: "Plants & Photosynthesis",
+                question: "What is the food produced by plants called?<br><small>(植物產生的食物叫什麼？)</small>",
+                options: ["Protein", "Glucose (葡萄糖)", "Fat", "Minerals"],
+                correct: 1
+            },
+            {
+                id: 51,
+                category: "Plants & Photosynthesis",
+                question: "Which plant part transports food?<br><small>(植物哪個部分運輸食物？)</small>",
+                options: ["Xylem (木質部)", "Phloem (韌皮部)", "Root hairs (根毛)", "Stomata (氣孔)"],
+                correct: 1
+            },
+            {
+                id: 52,
+                category: "Plants & Photosynthesis",
+                question: "What do stomata do?<br><small>(氣孔的作用是？)</small>",
+                options: ["Produce food", "Allow gas exchange", "Store water", "Absorb nutrients"],
+                correct: 1
+            },
+            {
+                id: 53,
+                category: "Plants & Photosynthesis",
+                question: "Which part of the plant becomes the fruit?<br><small>(植物的哪個部分變成果實？)</small>",
+                options: ["Petal (花瓣)", "Ovary (子房)", "Stamen (雄蕊)", "Sepal (萼片)"],
+                correct: 1
+            },
+            {
+                id: 54,
+                category: "Plants & Photosynthesis",
+                question: "What conditions does a seed need to germinate?<br><small>(種子發芽需要什麼條件？)</small>",
+                options: ["Light only", "Water, warmth and oxygen", "Cold and dry", "Darkness only"],
+                correct: 1
+            },
+            {
+                id: 55,
+                category: "Plants & Photosynthesis",
+                question: "Which plants reproduce using spores?<br><small>(哪些植物用孢子繁殖？)</small>",
+                options: ["Rose (玫瑰)", "Fern (蕨類)", "Apple tree (蘋果樹)", "Sunflower (向日葵)"],
+                correct: 1
+            },
+            {
+                id: 56,
+                category: "Plants & Photosynthesis",
+                question: "What is pollination?<br><small>(什麼是授粉？)</small>",
+                options: ["Watering plants", "Transfer of pollen to stigma", "Plant growing", "Making seeds"],
+                correct: 1
+            },
+            {
+                id: 57,
+                category: "Plants & Photosynthesis",
+                question: "Why do plants need carbon dioxide?<br><small>(植物為什麼需要二氧化碳？)</small>",
+                options: ["For respiration only", "For photosynthesis", "For growth only", "To make oxygen"],
+                correct: 1
+            },
+            {
+                id: 58,
+                category: "Plants & Photosynthesis",
+                question: "What is the male part of a flower called?<br><small>(花的雄性部分叫什麼？)</small>",
+                options: ["Pistil (雌蕊)", "Stamen (雄蕊)", "Ovary (子房)", "Style (花柱)"],
+                correct: 1
+            },
+            {
+                id: 59,
+                category: "Plants & Photosynthesis",
+                question: "Which plants lose their leaves in winter?<br><small>(哪些植物在冬天落葉？)</small>",
+                options: ["Pine trees (松樹)", "Deciduous trees (落葉樹)", "Cactus (仙人掌)", "Grass (草)"],
+                correct: 1
+            },
+            {
+                id: 60,
+                category: "Plants & Photosynthesis",
+                question: "What do plants release during respiration?<br><small>(植物呼吸時釋放什麼？)</small>",
+                options: ["Oxygen only", "Carbon dioxide", "Nitrogen", "Glucose"],
+                correct: 1
+            },
+
+            // Category 4: Ecosystems & Food Chains (Questions 61-80)
+            {
+                id: 61,
+                category: "Ecosystems & Food Chains",
+                question: "What happens when one organism eats another?<br><small>(當一個生物吃另一個時會發生什麼？)</small>",
+                options: ["Energy is transferred (能量被傳遞)", "Energy is destroyed", "Energy is created", "Nothing happens"],
+                correct: 0
+            },
+            {
+                id: 62,
+                category: "Ecosystems & Food Chains",
+                question: "What do arrows in a food chain show?<br><small>(食物鏈中的箭頭顯示什麼？)</small>",
+                options: ["Direction of movement", "Flow of energy", "Size of animals", "Age of organisms"],
+                correct: 1
+            },
+            {
+                id: 63,
+                category: "Ecosystems & Food Chains",
+                question: "What is a food web?<br><small>(什麼是食物網？)</small>",
+                options: ["A spider's web", "Connected food chains", "A type of plant", "A cooking tool"],
+                correct: 1
+            },
+            {
+                id: 64,
+                category: "Ecosystems & Food Chains",
+                question: "What is the source of energy for most ecosystems?<br><small>(大多數生態系統的能量來源是？)</small>",
+                options: ["The Moon", "The Sun", "The wind", "Water"],
+                correct: 1
+            },
+            {
+                id: 65,
+                category: "Ecosystems & Food Chains",
+                question: "Which organisms are always at the start of a food chain?<br><small>(哪些生物總是在食物鏈的開始？)</small>",
+                options: ["Animals", "Plants/Producers", "Bacteria", "Predators"],
+                correct: 1
+            },
+            {
+                id: 66,
+                category: "Ecosystems & Food Chains",
+                question: "What is a predator?<br><small>(什麼是捕食者？)</small>",
+                options: ["An animal that hunts other animals", "An animal that eats plants", "A type of plant", "A decomposer"],
+                correct: 0
+            },
+            {
+                id: 67,
+                category: "Ecosystems & Food Chains",
+                question: "What is a prey?<br><small>(什麼是獵物？)</small>",
+                options: ["An animal that hunts", "An animal that is hunted", "A plant eater", "A top predator"],
+                correct: 1
+            },
+            {
+                id: 68,
+                category: "Ecosystems & Food Chains",
+                question: "What happens if producers are removed from an ecosystem?<br><small>(如果生產者從生態系統中被移除會怎樣？)</small>",
+                options: ["Nothing changes", "The ecosystem collapses", "Animals increase", "Plants grow more"],
+                correct: 1
+            },
+            {
+                id: 69,
+                category: "Ecosystems & Food Chains",
+                question: "Which of these is a producer?<br><small>(哪個是生產者？)</small>",
+                options: ["Rabbit", "Grass", "Fox", "Eagle"],
+                correct: 1
+            },
+            {
+                id: 70,
+                category: "Ecosystems & Food Chains",
+                question: "What do decomposers do in an ecosystem?<br><small>(分解者在生態系統中做什麼？)</small>",
+                options: ["Eat living animals", "Break down dead matter", "Make oxygen", "Produce food"],
+                correct: 1
+            },
+            {
+                id: 71,
+                category: "Ecosystems & Food Chains",
+                question: "What is a primary consumer?<br><small>(什麼是初級消費者？)</small>",
+                options: ["An animal that eats plants", "An animal that eats meat", "A plant", "A decomposer"],
+                correct: 0
+            },
+            {
+                id: 72,
+                category: "Ecosystems & Food Chains",
+                question: "What is a secondary consumer?<br><small>(什麼是次級消費者？)</small>",
+                options: ["A plant eater", "An animal that eats herbivores", "A decomposer", "A producer"],
+                correct: 1
+            },
+            {
+                id: 73,
+                category: "Ecosystems & Food Chains",
+                question: "What is competition in an ecosystem?<br><small>(生態系統中的競爭是什麼？)</small>",
+                options: ["Animals fighting for resources", "Plants growing together", "Rain falling", "Sun shining"],
+                correct: 0
+            },
+            {
+                id: 74,
+                category: "Ecosystems & Food Chains",
+                question: "What is a habitat?<br><small>(什麼是棲息地？)</small>",
+                options: ["Where an animal lives", "What an animal eats", "How an animal moves", "When an animal sleeps"],
+                correct: 0
+            },
+            {
+                id: 75,
+                category: "Ecosystems & Food Chains",
+                question: "Which organisms break down dead plants and animals?<br><small>(哪些生物分解死去的植物和動物？)</small>",
+                options: ["Producers", "Consumers", "Decomposers", "Predators"],
+                correct: 2
+            },
+            {
+                id: 76,
+                category: "Ecosystems & Food Chains",
+                question: "What is a population?<br><small>(什麼是種群？)</small>",
+                options: ["All organisms in an area", "Same species in an area", "Only plants", "Only animals"],
+                correct: 1
+            },
+            {
+                id: 77,
+                category: "Ecosystems & Food Chains",
+                question: "Why is bacteria important in soil?<br><small>(為什麼土壤中的細菌很重要？)</small>",
+                options: ["They make soil colorful", "They decompose dead matter", "They eat plants", "They block water"],
+                correct: 1
+            },
+            {
+                id: 78,
+                category: "Ecosystems & Food Chains",
+                question: "What does 'extinction' mean?<br><small>('滅絕'是什麼意思？)</small>",
+                options: ["Moving to a new habitat", "When a species dies out completely", "Eating too much", "Growing bigger"],
+                correct: 1
+            },
+            {
+                id: 79,
+                category: "Ecosystems & Food Chains",
+                question: "What is a scavenger?<br><small>(什麼是食腐動物？)</small>",
+                options: ["An animal that hunts live prey", "An animal that eats dead animals", "A plant eater", "A producer"],
+                correct: 1
+            },
+            {
+                id: 80,
+                category: "Ecosystems & Food Chains",
+                question: "Which of these is a food chain in correct order?<br><small>(以下哪個是順序正確的食物鏈？)</small>",
+                options: ["Grass → Rabbit → Fox", "Fox → Rabbit → Grass", "Rabbit → Grass → Fox", "Grass → Fox → Rabbit"],
+                correct: 0
+            },
+
+            // Category 5: Life Cycles & Adaptations (Questions 81-100)
+            {
+                id: 81,
+                category: "Life Cycles & Adaptations",
+                question: "Which animal undergoes metamorphosis?<br><small>(哪種動物會變態？)</small>",
+                options: ["Dog (狗)", "Cat (貓)", "Butterfly (蝴蝶)", "Elephant (大象)"],
+                correct: 2
+            },
+            {
+                id: 82,
+                category: "Life Cycles & Adaptations",
+                question: "What is the butterfly life cycle stage wrapped in a case?<br><small>(蝴蝶包裹在保護殼中的階段叫？)</small>",
+                options: ["Egg (卵)", "Pupa (蛹)", "Larva (幼蟲)", "Adult (成蟲)"],
+                correct: 1
+            },
+            {
+                id: 83,
+                category: "Life Cycles & Adaptations",
+                question: "Which is an adaptation for cold climates?<br><small>(哪個是寒冷氣候的適應特徵？)</small>",
+                options: ["Long legs for running", "Large ears", "Thick fur for insulation", "Bright colors"],
+                correct: 2
+            },
+            {
+                id: 84,
+                category: "Life Cycles & Adaptations",
+                question: "What is the larva of a butterfly called?<br><small>(蝴蝶的幼蟲叫什麼？)</small>",
+                options: ["Worm", "Caterpillar", "Grub", "Maggot"],
+                correct: 1
+            },
+            {
+                id: 85,
+                category: "Life Cycles & Adaptations",
+                question: "What is an adaptation?<br><small>(什麼是適應？)</small>",
+                options: ["A special feature helping survival", "A type of food", "A place to live", "A kind of animal"],
+                correct: 0
+            },
+            {
+                id: 86,
+                category: "Life Cycles & Adaptations",
+                question: "Why do camels have humps?<br><small>(駱駝為什麼有駝峰？)</small>",
+                options: ["To store water", "To store fat", "For balance", "For protection"],
+                correct: 1
+            },
+            {
+                id: 87,
+                category: "Life Cycles & Adaptations",
+                question: "Which adaptation helps fish swim?<br><small>(什麼適應特徵幫助魚游泳？)</small>",
+                options: ["Legs", "Fins", "Wings", "Arms"],
+                correct: 1
+            },
+            {
+                id: 88,
+                category: "Life Cycles & Adaptations",
+                question: "Why do polar bears have white fur?<br><small>(北極熊為什麼有白色皮毛？)</small>",
+                options: ["For warmth only", "For camouflage", "To attract mates", "For swimming"],
+                correct: 1
+            },
+            {
+                id: 89,
+                category: "Life Cycles & Adaptations",
+                question: "What is the first stage of a frog's life cycle?<br><small>(青蛙生命週期的第一階段是？)</small>",
+                options: ["Tadpole", "Egg", "Adult frog", "Froglet"],
+                correct: 1
+            },
+            {
+                id: 90,
+                category: "Life Cycles & Adaptations",
+                question: "Which adaptation helps a cactus survive in the desert?<br><small>(什麼適應特徵幫助仙人掌在沙漠生存？)</small>",
+                options: ["Large leaves", "Spines instead of leaves", "Thick trunk", "Deep roots only"],
+                correct: 1
+            },
+            {
+                id: 91,
+                category: "Life Cycles & Adaptations",
+                question: "What is the life cycle of a chicken?<br><small>(雞的生命週期是？)</small>",
+                options: ["Egg → Chick → Adult chicken", "Chick → Egg → Chicken", "Adult → Egg → Chick", "Egg → Adult directly"],
+                correct: 0
+            },
+            {
+                id: 92,
+                category: "Life Cycles & Adaptations",
+                question: "Why do birds migrate?<br><small>(鳥類為什麼遷徙？)</small>",
+                options: ["To find food and suitable climate", "For fun", "To escape predators", "To lay eggs anywhere"],
+                correct: 0
+            },
+            {
+                id: 93,
+                category: "Life Cycles & Adaptations",
+                question: "What is a nocturnal animal?<br><small>(什麼是夜行性動物？)</small>",
+                options: ["Active during day", "Active at night", "Active in winter", "Active in water"],
+                correct: 1
+            },
+            {
+                id: 94,
+                category: "Life Cycles & Adaptations",
+                question: "Which animal has the best adaptation for flying?<br><small>(哪種動物有最佳的飛行適應特徵？)</small>",
+                options: ["Dog", "Bird", "Fish", "Snake"],
+                correct: 1
+            },
+            {
+                id: 95,
+                category: "Life Cycles & Adaptations",
+                question: "What do tadpoles breathe with?<br><small>(蝌蚪用什麼呼吸？)</small>",
+                options: ["Lungs", "Gills", "Skin", "Nose"],
+                correct: 1
+            },
+            {
+                id: 96,
+                category: "Life Cycles & Adaptations",
+                question: "Why do some animals hibernate?<br><small>(為什麼有些動物冬眠？)</small>",
+                options: ["To avoid cold and save energy", "To find food", "To grow faster", "To escape predators"],
+                correct: 0
+            },
+            {
+                id: 97,
+                category: "Life Cycles & Adaptations",
+                question: "What adaptation helps a giraffe reach high leaves?<br><small>(什麼適應特徵幫助長頸鹿吃到高處的葉子？)</small>",
+                options: ["Long neck", "Long legs", "Big ears", "Long tail"],
+                correct: 0
+            },
+            {
+                id: 98,
+                category: "Life Cycles & Adaptations",
+                question: "Which animal goes through incomplete metamorphosis?<br><small>(哪種動物經歷不完全變態？)</small>",
+                options: ["Butterfly", "Frog", "Grasshopper", "Beetle"],
+                correct: 2
+            },
+            {
+                id: 99,
+                category: "Life Cycles & Adaptations",
+                question: "What is mimicry?<br><small>(什麼是擬態？)</small>",
+                options: ["Copying another animal's appearance", "Making sounds", "Building nests", "Changing color"],
+                correct: 0
+            },
+            {
+                id: 100,
+                category: "Life Cycles & Adaptations",
+                question: "Why do seeds need to disperse?<br><small>(種子為什麼需要散播？)</small>",
+                options: ["To find space, light and water", "To look pretty", "To attract animals", "To make food"],
+                correct: 0
+            }
+        ];
+
+        // User answers storage
+        let userAnswers = {};
+
+        // Initialize quiz
+        function initQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${index + 1} of 100 | ${q.category}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, optIndex) => `
+                            <div class="option" onclick="selectOption(${index}, ${optIndex})" data-q="${index}" data-opt="${optIndex}">
+                                ${String.fromCharCode(65 + optIndex)}. ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+            
+            updateProgress();
+        }
+
+        // Select option
+        function selectOption(questionIndex, optionIndex) {
+            userAnswers[questionIndex] = optionIndex;
+            
+            // Update UI
+            const options = document.querySelectorAll(`[data-q="${questionIndex}"]`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[optionIndex].classList.add('selected');
+            
+            updateProgress();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            const progress = (answered / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Submit quiz
+        function submitQuiz() {
+            const answered = Object.keys(userAnswers).length;
+            if (answered < questions.length) {
+                const confirmSubmit = confirm(`You have answered ${answered} out of 100 questions. Are you sure you want to submit?`);
+                if (!confirmSubmit) return;
+            }
+            
+            // Calculate scores
+            let totalCorrect = 0;
+            let categoryScores = {
+                "Living Things & Classification": { correct: 0, total: 0 },
+                "Human Body Systems": { correct: 0, total: 0 },
+                "Plants & Photosynthesis": { correct: 0, total: 0 },
+                "Ecosystems & Food Chains": { correct: 0, total: 0 },
+                "Life Cycles & Adaptations": { correct: 0, total: 0 }
+            };
+            
+            questions.forEach((q, index) => {
+                const category = q.category;
+                categoryScores[category].total++;
+                
+                if (userAnswers[index] === q.correct) {
+                    totalCorrect++;
+                    categoryScores[category].correct++;
+                }
+                
+                // Show correct/incorrect
+                const options = document.querySelectorAll(`[data-q="${index}"]`);
+                options.forEach((opt, optIndex) => {
+                    opt.classList.remove('selected');
+                    if (optIndex === q.correct) {
+                        opt.classList.add('correct');
+                    } else if (optIndex === userAnswers[index] && optIndex !== q.correct) {
+                        opt.classList.add('incorrect');
+                    }
+                    opt.onclick = null;
+                    opt.style.cursor = 'default';
+                });
+            });
+            
+            // Show results
+            const percentage = Math.round((totalCorrect / questions.length) * 100);
+            document.getElementById('scoreCircle').textContent = percentage + '%';
+            document.getElementById('scoreText').textContent = `You answered ${totalCorrect}/100 questions correctly`;
+            
+            // Update category scores
+            document.getElementById('cat1Score').textContent = `${categoryScores["Living Things & Classification"].correct}/20`;
+            document.getElementById('cat2Score').textContent = `${categoryScores["Human Body Systems"].correct}/20`;
+            document.getElementById('cat3Score').textContent = `${categoryScores["Plants & Photosynthesis"].correct}/20`;
+            document.getElementById('cat4Score').textContent = `${categoryScores["Ecosystems & Food Chains"].correct}/20`;
+            document.getElementById('cat5Score').textContent = `${categoryScores["Life Cycles & Adaptations"].correct}/20`;
+            
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Reset quiz
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('results').classList.remove('show');
+            initQuiz();
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize on load
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
